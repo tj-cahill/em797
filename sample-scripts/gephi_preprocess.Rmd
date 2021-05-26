@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error = FALSE)
 library(readxl)
 library(readr)
 library(dplyr)
+library(tidyr)
+library(stringr)
 ```
 
 # Importing Excel Data
@@ -40,4 +42,18 @@ replies %>%
   write_csv("../data/gephi/reply_sample.csv")
 ```
 
+## Mention Networks
+While each tweet can only be marked as a reply to a single thread author, there might be multiple other users *mentioned* in the tweet, which can also be used as the basis for a network model. 
 
+In this case, in addition to isolating `Source` and `Target` columns, as before, we will also need to split up rows, since each tweet can represent multiple connections between users.
+
+```{r mention-edges}
+mentions <- lab %>%
+  select(Source = Author, Target = "Mentioned Authors") %>%
+  separate_rows(Target, sep = ", ") %>%
+  mutate(Target = str_replace_all(Target, "@", ""))
+
+mentions %>%
+  sample_n(500) %>%
+  write_csv("../data/gephi/mention_sample.csv")
+```
