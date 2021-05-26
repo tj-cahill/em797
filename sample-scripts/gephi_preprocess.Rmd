@@ -2,29 +2,42 @@
 title: "Brandwatch Data Preprocessing for Gephi"
 author: "Tiernan Cahill"
 date: "26/05/2021"
-output: html_document
+output: html_notebook
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error = FALSE)
+library(readxl)
+library(readr)
+library(dplyr)
 ```
 
-## R Markdown
+# Importing Excel Data
+We begin by using the `read_excel` function from the `readxl` library to import the raw Brandwatch data output from the provided XLS data file into a dataframe. This function has options to selectively import particular columns, and only two are strictly necessary to import the network into Gephi, but we will import the entire dataset for now in case we decide to make use of different sets of variables (e.g., including # of followers as a node-level measurement).
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r import, message=FALSE}
+lab <- read_excel("../data/lab.xlsx")
 ```
 
-## Including Plots
+# Creating an Edgelist
+In order to import data into Gephi, we need to convert the list of documents (i.e., Tweet) in the spreadsheet into an *edgelist*. While there are other import formats available in Gephi (e.g., *adjacency matrix*), an edgelist is the most structurally similar to the data we alrady have.
 
-You can also embed plots, for example:
+Two common ways of representing Twitter data as network models involve using edges in the network to operationalize *replies* and *mentions* respectively. In both cases, the nodes in the network represent *users*.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+## Reply Networks
+In order to create an edgelist based on *replies*, we need to isolate two columns from the dataset, containing the username of the *author* of each tweet, and (where relevant) the username of the author of the reply thread in which that tweet appeared.
+
+The contents of these columns need to be **cleaned**, to ensure that usernames are formatted the same way throughout the dataset, and the columns themselves need to be designated as `Source` and `Target`for Gephi's importer. 
+
+The edgelist can then be exported as a CSV file. Because Gephi often struggles to handle large datasets, we will only export a sample (*n* = 500) of the full edgelist. Note that the result will be a *directed* network between users based on replies.
+
+```{r reply-edges}
+replies <- lab %>% 
+  select(Source = Author, Target = "Thread Author")
+
+replies %>% 
+  sample_n(500) %>%
+  write_csv("../data/gephi/reply_sample.csv")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
