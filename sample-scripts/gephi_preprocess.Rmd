@@ -2,7 +2,8 @@
 title: "Brandwatch Data Preprocessing for Gephi"
 author: "Tiernan Cahill"
 date: "26/05/2021"
-output: html_notebook
+output: 
+  html_notebook
 ---
 
 ```{r setup, include=FALSE}
@@ -56,4 +57,44 @@ mentions <- lab %>%
 mentions %>%
   sample_n(500) %>%
   write_csv("../data/gephi/mention_sample.csv")
+```
+
+# Creating an Adjacency Matrix
+Another way of representing Twitter data as a network  is to model the *co-incidence* of hashtags (i.e., how often different hashtags appear together in the same tweet). In this case, *nodes* represent hashtags rather than users and the network is *undirected*. This approach can be used to understand how concepts and communities represented by hashtags overlap and intersect. 
+
+Since this format will result in a large number of edges generated per tweet (since every hashtag is connected to every other hashtag in the same document), we will take this opportunity to try generating an adjacency matrix, which can also be imported into Gephi.
+
+An adjacency matrix has a row and column for every node in the network, with the cell $a_{i,j}$ containing the weight of the edge between the nodes $i$ and $j$. 
+
+```{r hashtag-matrix}
+htags <- lapply(lab$Hashtags, str_split, pattern = ", ")
+htags <- lapply(htags, unlist, recursive = F)
+
+# Credit to Martin Stefan for the matrix generation code below 
+# [https://tinyurl.com/7sd76m8p]
+
+# First create a list of unique tags in the dataset to set the dimensions of the matrix
+utags <- unique(unlist(htags))
+
+htag_mat <- matrix(0, length(utags), length(utags))
+rownames(htag_mat) <- utags
+colnames(htag_mat) <- utags
+
+# Then, iterate through the list of tweets and add one to the adjacency matrix for each co-occurence detected
+for(t in 1:length(htags)) {
+  tags <- htags[[t]]
+  
+  if(length(tags) == 1) next()
+  
+  htag_mat[tags, tags] <- htag_mat[tags, tags] + 1
+}
+
+# Set the diagonal of the matrix to 0 (hashtags are not adjacent to themselves)
+diag(htag_mat) <- 0
+
+# Sample from the matrix ensuring that the rows continue to match the columns
+sample_i <- sample(1:nrow(htag_mat), size = 500, replace = F)
+htag_mat_small <- htag_mat[sample_i, sample_i]
+write.csv(htag_mat_small, "../data/gephi/hashtag_sample.csv")
+
 ```
