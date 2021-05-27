@@ -3,7 +3,7 @@ title: "Brandwatch Data Preprocessing for Gephi"
 author: "Tiernan Cahill"
 date: "26/05/2021"
 output: 
-  html_notebook
+  github_document
 ---
 
 ```{r setup, include=FALSE}
