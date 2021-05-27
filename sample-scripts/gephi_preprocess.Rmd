@@ -13,7 +13,7 @@ library(readr)
 library(dplyr)
 library(tidyr)
 library(stringr)
-n = 500
+n = 1000
 ```
 
 # Importing Excel Data
@@ -37,7 +37,8 @@ The edgelist can then be exported as a CSV file. Because Gephi often struggles t
 
 ```{r reply-edges}
 replies <- lab %>% 
-  select(Source = Author, Target = "Thread Author")
+  select(Source = Author, Target = "Thread Author", Date) %>%
+  mutate(Time = as.numeric(as.POSIXct(Date)) * 1000, .keep = "unused") # Convert date to Gephi's preferred (weird) format
 
 replies_small <- replies %>% 
   sample_n(n) %>% 
@@ -51,9 +52,10 @@ In this case, in addition to isolating `Source` and `Target` columns, as before,
 
 ```{r mention-edges}
 mentions <- lab %>%
-  select(Source = Author, Target = "Mentioned Authors") %>%
+  select(Source = Author, Target = "Mentioned Authors", Date) %>%
   separate_rows(Target, sep = ", ") %>%
-  mutate(Target = str_replace_all(Target, "@", ""))
+  mutate(Target = str_replace_all(Target, "@", "")) %>%
+  mutate(Time = as.numeric(as.POSIXct(Date)) * 1000, .keep = "unused") 
 
 mentions_small <- mentions %>%
   sample_n(n) %>% 
@@ -61,14 +63,13 @@ mentions_small <- mentions %>%
 ```
 
 # Creating a Node List
-In addition to the edges that connect users in the network (representing either replies or mentions), we may wish to retain some additional *node-level* information about the users themselves
+In addition to the edges that connect users in the network (representing either replies or mentions), we may wish to retain some additional *node-level* information about the users themselves, such as where they live, their number of followers, and whether or not they are verified on Twitter.
 
 ```{r node-vars}
-
 # Retain Region, Followers, and Verified status
 users <- lab %>% 
   select(Id = Author, Verified = "Twitter Verified", Followers = "Twitter Followers", Region) %>%
-  distinct(Id)
+  distinct(Id, .keep_all = T)
 
 # Create nodelists to match the sample edgelists produced above and export
 users_replies_small <- users %>%
