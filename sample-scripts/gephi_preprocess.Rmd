@@ -13,6 +13,7 @@ library(readr)
 library(dplyr)
 library(tidyr)
 library(stringr)
+n = 500
 ```
 
 # Importing Excel Data
@@ -32,15 +33,15 @@ In order to create an edgelist based on *replies*, we need to isolate two column
 
 The contents of these columns need to be **cleaned**, to ensure that usernames are formatted the same way throughout the dataset, and the columns themselves need to be designated as `Source` and `Target`for Gephi's importer. 
 
-The edgelist can then be exported as a CSV file. Because Gephi often struggles to handle large datasets, we will only export a sample (*n* = 500) of the full edgelist. Note that the result will be a *directed* network between users based on replies.
+The edgelist can then be exported as a CSV file. Because Gephi often struggles to handle large datasets, we will only export a sample (*n* = `r n`) of the full edgelist. Note that the result will be a *directed* network between users based on replies.
 
 ```{r reply-edges}
 replies <- lab %>% 
   select(Source = Author, Target = "Thread Author")
 
-replies %>% 
-  sample_n(500) %>%
-  write_csv("../data/gephi/reply_sample.csv")
+replies_small <- replies %>% 
+  sample_n(n) %>% 
+  write_csv("../data/gephi/reply_sample_edges.csv")
 ```
 
 ## Mention Networks
@@ -54,10 +55,31 @@ mentions <- lab %>%
   separate_rows(Target, sep = ", ") %>%
   mutate(Target = str_replace_all(Target, "@", ""))
 
-mentions %>%
-  sample_n(500) %>%
-  write_csv("../data/gephi/mention_sample.csv")
+mentions_small <- mentions %>%
+  sample_n(n) %>% 
+  write_csv("../data/gephi/mention_sample_edges.csv")
 ```
+
+# Creating a Node List
+In addition to the edges that connect users in the network (representing either replies or mentions), we may wish to retain some additional *node-level* information about the users themselves
+
+```{r node-vars}
+
+# Retain Region, Followers, and Verified status
+users <- lab %>% 
+  select(Id = Author, Verified = "Twitter Verified", Followers = "Twitter Followers", Region) %>%
+  distinct()
+
+# Create nodelists to match the sample edgelists produced above and export
+users_replies_small <- users %>%
+  filter(Id %in% unique(unlist(replies_small))) %>%
+  write_csv("../data/gephi/reply_sample_nodes.csv")
+
+users_mentions_small <- users %>%
+  filter(Id %in% unique(unlist(mentions_small))) %>%
+  write_csv("../data/gephi/mention_sample_nodes.csv")
+```
+
 
 # Creating an Adjacency Matrix
 Another way of representing Twitter data as a network  is to model the *co-incidence* of hashtags (i.e., how often different hashtags appear together in the same tweet). In this case, *nodes* represent hashtags rather than users and the network is *undirected*. This approach can be used to understand how concepts and communities represented by hashtags overlap and intersect. 
@@ -93,8 +115,10 @@ for(t in 1:length(htags)) {
 diag(htag_mat) <- 0
 
 # Sample from the matrix ensuring that the rows continue to match the columns
-sample_i <- sample(1:nrow(htag_mat), size = 500, replace = F)
+sample_i <- sample(1:nrow(htag_mat), size = n, replace = F)
 htag_mat_small <- htag_mat[sample_i, sample_i]
-write.csv(htag_mat_small, "../data/gephi/hashtag_sample.csv")
-
+write.csv(htag_mat_small, "../data/gephi/hashtag_sample_matrix.csv")
 ```
+
+
+
