@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Flag sample and lab code in RMarkdown (which Linguist considers to be 'prose') as R
+*.rmd linguist-language=R
