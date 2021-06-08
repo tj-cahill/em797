@@ -40,15 +40,57 @@ The format that most closely resembles the structure of the data we already have
 edges <- lab %>%
   select(V1 = Author, V2 = MentionedAuthors) %>%
   separate_rows(V2, sep = ", ") %>%                   # Possibly more than one edge per tweet
-  mutate(V2 = str_replace_all(V2, "@", ""))       # Node IDs should be formatted the same in both columns
+  mutate(V2 = str_replace_all(V2, "@", ""))           # Node IDs should be formatted the same in both columns
 
 # Let's take a look!
 head(edges)
 ```
 
+### Weighted Edges
 Note that some of these tweets don't mention any other users, and so we have incomplete edges. We can choose to retain these in our network model as *isolates* or to remove them from the dataset. Also, remember that these edges represent a *directed* network. In some cases, there may be more than one tweet between the same pair of users, which we can represent by giving the edge a *weight*.
 
 ```{r weighted-edges}
 weighted_edges <- edges %>% 
   count(V1, V2, name = "weight")
+```
+
+There will now be no duplicate edges in the list, but user pairs who had multiple interactions in the sample will have a higher weight associated with that edge.
+
+### Converting to a Network
+To conduct later network analysis on the network model we've created, we will need to convert it into a *graph object* that the tools from the `igraph` package can understand. (Also, this is a good place to point out that `igraph` functions refer to nodes as *vertices*.)
+```{r edgelist2graph}
+mention_net <- graph_from_data_frame(weighted_edges, directed = TRUE) %>%
+  delete_vertices("NA")  # igraph interprets missing values as a string
+```
+
+### Adding Node Attributes
+In some situations, we may want a graph object to include attributes associated with the nodes in a network that are not directly related to the network structure (e.g., the number of followers a particular Twitter user has, or the location they have added to their profile). To add these variables to the `igraph` object, we first need to extract them from the existing dataset and make sure that they are appropriately formatted (i.e., in alphabetical order of node ID and without duplicates).
+
+```{r node-attr}
+nodes <- lab %>%
+  select(id = Author, verified = TwitterVerified, followers = TwitterFollowers, region = Region) %>%
+  mutate(verified = as.logical(verified),
+         region = as.factor(region))
+
+# Also need to make sure that mentioned users are included, even though we do not have data for them
+mentioned_nodes <- lab %>%
+  select(id = MentionedAuthors) %>%
+  mutate(id = str_replace_all(id, "@", "")) %>%
+  separate_rows(id, sep = ", ")
+
+nodes <- nodes %>% 
+  bind_rows(mentioned_nodes) %>%
+  distinct(id, .keep_all = T) %>%
+  arrange(id) %>%
+  .[-1,]          # Remove empty row created by isolates
+
+# Before adding variables to the graph object, check and make sure that the lists line up
+cbind(names(V(mention_net)), nodes$id) %>% head()
+vcount(mention_net) == nrow(nodes)
+
+# If the above checks out, set vertex attributes from the node list
+mention_net <- mention_net %>%
+  set_vertex_attr("verified", index = V(mention_net), nodes$verified) %>%
+  set_vertex_attr("followers", index = V(mention_net), nodes$followers) %>%
+  set_vertex_attr("region", index = V(mention_net), nodes$region)
 ```
