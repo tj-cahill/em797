@@ -59,7 +59,7 @@ There will now be no duplicate edges in the list, but user pairs who had multipl
 ### Converting to a Network
 To conduct later network analysis on the network model we've created, we will need to convert it into a *graph object* that the tools from the `igraph` package can understand. (Also, this is a good place to point out that `igraph` functions refer to nodes as *vertices*.)
 ```{r edgelist2graph}
-mention_net <- graph_from_data_frame(weighted_edges, directed = TRUE) %>%
+mention_graph <- graph_from_data_frame(weighted_edges, directed = TRUE) %>%
   delete_vertices("NA")  # igraph interprets missing values as a string
 ```
 
@@ -85,12 +85,21 @@ nodes <- nodes %>%
   .[-1,]          # Remove empty row created by isolates
 
 # Before adding variables to the graph object, check and make sure that the lists line up
-cbind(names(V(mention_net)), nodes$id) %>% head()
-vcount(mention_net) == nrow(nodes)
+cbind(names(V(mention_graph)), nodes$id) %>% head()
+vcount(mention_graph) == nrow(nodes)
 
 # If the above checks out, set vertex attributes from the node list
-mention_net <- mention_net %>%
-  set_vertex_attr("verified", index = V(mention_net), nodes$verified) %>%
-  set_vertex_attr("followers", index = V(mention_net), nodes$followers) %>%
-  set_vertex_attr("region", index = V(mention_net), nodes$region)
+mention_graph <- mention_graph %>%
+  set_vertex_attr("verified", index = V(mention_graph), nodes$verified) %>%
+  set_vertex_attr("followers", index = V(mention_graph), nodes$followers) %>%
+  set_vertex_attr("region", index = V(mention_graph), nodes$region)
+```
+
+## Adjacacency Matrix
+Graph models can also be represented as an *adjacency matrix*.  This format can be especially useful for representing small, densely connected networks, but can get large and unwieldy with large, sparse networks (such as the Twitter mentions we've been looking at). 
+
+It's worth noting that `igraph` can convert back and forth between most major network formats, allowing us to easily produce an adjacency matrix representation from our existing graph object.
+
+```{r adj-matrix}
+mention_matrix <- as_adjacency_matrix(mention_graph)
 ```
