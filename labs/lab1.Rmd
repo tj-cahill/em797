@@ -100,6 +100,39 @@ Graph models can also be represented as an *adjacency matrix*.  This format can 
 
 It's worth noting that `igraph` can convert back and forth between most major network formats, allowing us to easily produce an adjacency matrix representation from our existing graph object.
 
-```{r adj-matrix}
+```{r graph2matrix}
 mention_matrix <- as_adjacency_matrix(mention_graph)
 ```
+
+In addition to modelling interactions between users, we can also look at co-incidence between hashtags as a network. Below, we have some code that generates an adjacency matrix of hashtags based on the Brandwatch data. Unlike the earlier network of mentions, this one will be *undirected*, since it only indicates that two hashtags appeared together in a tweet and the number of times this occurred in the dataset (represented as the *weight* of that edge).
+
+```{r adj-matrix}
+htags <- lapply(lab$Hashtags, str_split, pattern = ", ")
+htags <- lapply(htags, unlist, recursive = F)
+
+# Credit to Martin Stefan for the matrix generation code below 
+# [https://tinyurl.com/7sd76m8p]
+
+# First create a list of unique tags in the dataset to set the dimensions of the matrix
+utags <- unique(unlist(htags))
+
+htag_matrix <- matrix(0, length(utags), length(utags))
+rownames(htag_matrix) <- utags
+colnames(htag_matrix) <- utags
+
+# Then, iterate through the list of tweets and add to the adjacency matrix
+for(t in 1:length(htags)) {
+  tags <- htags[[t]]
+  
+  if(length(tags) == 1) next()
+  
+  htag_matrix[tags, tags] <- htag_matrix[tags, tags] + 1
+}
+
+# Set the diagonal of the matrix to 0 (hashtags are not adjacent to themselves)
+diag(htag_matrix) <- 0
+
+# Creat graph object
+htag_graph <- graph_from_adjacency_matrix(htag_matrix, mode = "undirected", weighted = TRUE)
+```
+
