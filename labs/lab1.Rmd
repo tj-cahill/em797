@@ -9,3 +9,41 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error = FALSE)
 ```
 
+# Loading Data and Required Packages
+Let's begin by importing the raw data from Brandwatch (stored in an Excel file), as well as loading all of the packages we will need for this lab:
+
+  - `readxl` for reading Excel data into an R data frame
+  - `dplyr` for wrangling data
+  - `stringr` for parsing some messy text in the original dataset
+  - `tidyr` for restructuring data
+  - `igraph` for modelling and visualizing our network
+
+```{r load, message=FALSE}
+library(readxl)
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(igraph)
+
+lab <- read_excel("../data/lab.xlsx") %>% 
+  rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
+```
+
+Looking at the raw data, we can see that there are ```r ncol(lab)``` variable included from Brandwatch, many of which are not relevant to our analysis, or even to this particular context (e.g., `InstagramFollowers`). As we restructure this dataset into various formats for network analysis in the following sections, we will have to pick and choose which variables are necessary in each case. 
+
+# Formats for Representing Networks
+
+## Edge List
+The format that most closely resembles the structure of the data we already have is probably an *edge list*. In this case, we have a list of tweets, which we can model as *edges*, with the Twitter users who are either posting or mentioned in each tweet being represented as *nodes*. 
+
+```{r edgelist}
+edges <- lab %>%
+  select(Source = Author, Target = MentionedAuthors) %>%
+  separate_rows(Target, sep = ", ") %>%                   # Possibly more than one edge per tweet
+  mutate(Target = str_replace_all(Target, "@", ""))       # Node IDs should be formatted the same in both columns
+
+# Let's take a look!
+head(edges)
+```
+
+Note that some of these tweets don't mention any other users, and so we have incomplete edges (i.e., with a source, but no target). We can choose to retain these in our network model as *isolates* or to remove them from the dataset. Also, remember that these edges represent a *directed* network.
