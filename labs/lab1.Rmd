@@ -38,12 +38,17 @@ The format that most closely resembles the structure of the data we already have
 
 ```{r edgelist}
 edges <- lab %>%
-  select(Source = Author, Target = MentionedAuthors) %>%
-  separate_rows(Target, sep = ", ") %>%                   # Possibly more than one edge per tweet
-  mutate(Target = str_replace_all(Target, "@", ""))       # Node IDs should be formatted the same in both columns
+  select(V1 = Author, V2 = MentionedAuthors) %>%
+  separate_rows(V2, sep = ", ") %>%                   # Possibly more than one edge per tweet
+  mutate(V2 = str_replace_all(V2, "@", ""))       # Node IDs should be formatted the same in both columns
 
 # Let's take a look!
 head(edges)
 ```
 
-Note that some of these tweets don't mention any other users, and so we have incomplete edges (i.e., with a source, but no target). We can choose to retain these in our network model as *isolates* or to remove them from the dataset. Also, remember that these edges represent a *directed* network.
+Note that some of these tweets don't mention any other users, and so we have incomplete edges. We can choose to retain these in our network model as *isolates* or to remove them from the dataset. Also, remember that these edges represent a *directed* network. In some cases, there may be more than one tweet between the same pair of users, which we can represent by giving the edge a *weight*.
+
+```{r weighted-edges}
+weighted_edges <- edges %>% 
+  count(V1, V2, name = "weight")
+```
