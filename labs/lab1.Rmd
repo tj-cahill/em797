@@ -17,6 +17,7 @@ Let's begin by importing the raw data from Brandwatch (stored in an Excel file),
   - `stringr` for parsing some messy text in the original dataset
   - `tidyr` for restructuring data
   - `igraph` for modelling and visualizing our network
+  -  `Matrix` for handling sparse matrices
 
 ```{r load, message=FALSE}
 library(readxl)
@@ -24,6 +25,7 @@ library(dplyr)
 library(stringr)
 library(tidyr)
 library(igraph)
+library(Matrix)
 
 lab <- read_excel("../data/lab.xlsx") %>% 
   rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
@@ -132,7 +134,42 @@ for(t in 1:length(htags)) {
 # Set the diagonal of the matrix to 0 (hashtags are not adjacent to themselves)
 diag(htag_matrix) <- 0
 
-# Creat graph object
+# Create graph object
 htag_graph <- graph_from_adjacency_matrix(htag_matrix, mode = "undirected", weighted = TRUE)
+
+# Let's take a look!
+htag_graph[1:10, 1:10]
 ```
 
+## Adjacency List
+*Adjacency lists* are an alternative format to adjacency matrices, consisting of a list of nodes and each node's connected neighbours. For sparse networks, this format can be more efficient than an equivalent adjacency matrix, since the length of the list is equal to the number of nodes, whereas the size of the matrix is the square of the number of nodes.
+
+```{r adj-matrix2list}
+htag_list <- as_adj_list(htag_graph)
+
+# Let's take a look!
+htag_list %>% head(3)
+```
+
+## Affiliation Matrix
+We may sometimes need to model an *affiliation network*, showing connections between two different *classes* of nodes and, in turn, the indirect connections between nodes that share an affiliation. For example, we might create a model in which nodes represent both users **and** hashtags. In the resulting *bipartite graph*, users will never be directly connected to other users, but will be indirectly connected through the hashtags they have in common. 
+
+```{r aff-matrix}
+
+# Combine hashtag lists from multiple tweets by the same user
+htag_uses <- lab %>%
+  select(user = Author, htags = Hashtags) %>%
+  group_by(user) %>% mutate(htags = paste(htags, collapse = ", "),
+                            htags = str_split(htags, ", ")) %>%
+  rowwise() %>% mutate(htags = list(unique(htags)),
+                       htags = list(sort(htags))) %>%
+  distinct()
+
+# Convert the nested list to a matrix
+htag_uses_matrix <- htag_uses %>%
+  unnest(htags) %>%
+  table() %>% unclass() %>% Matrix()
+
+# Convert into a graph object
+htag_uses_graph <- graph_from_incidence_matrix(htag_uses_matrix, mode = "out")
+```
