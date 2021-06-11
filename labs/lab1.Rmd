@@ -2,7 +2,9 @@
 title: 'Lab 1: Data Formats for Networks'
 author: "Tiernan Cahill"
 date: "09/06/2021"
-output: html_document
+output:
+  pdf_document: default
+  github_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -59,8 +61,8 @@ The format that most closely resembles the structure of the data we already have
 ```{r edgelist}
 edges <- lab %>%
   select(V1 = Author, V2 = MentionedAuthors) %>%
-  separate_rows(V2, sep = ", ") %>%                   # Possibly more than one edge per tweet
-  mutate(V2 = str_replace_all(V2, "@", ""))           # Node IDs should be formatted the same in both columns
+  separate_rows(V2, sep = ", ") %>%                   # Possibly >1 edge per tweet
+  mutate(V2 = str_replace_all(V2, "@", ""))           # Consistent formatting for Node IDs
 
 # Let's take a look!
 head(edges)
@@ -94,11 +96,13 @@ In some situations, we may want a graph object to include attributes associated 
 
 ```{r node-attr}
 nodes <- lab %>%
-  select(id = Author, verified = TwitterVerified, followers = TwitterFollowers, region = Region) %>%
+  select(id = Author, verified = TwitterVerified, 
+         followers = TwitterFollowers, region = Region) %>%
   mutate(verified = as.logical(verified),
          region = as.factor(region))
 
-# Also need to make sure that mentioned users are included, even though we do not have data for them
+# Also need to make sure that mentioned users are included, 
+# even though we do not have data for them
 mentioned_nodes <- lab %>%
   select(id = MentionedAuthors) %>%
   mutate(id = str_replace_all(id, "@", "")) %>%
@@ -165,7 +169,8 @@ for(t in 1:length(htags)) {
 diag(htag_matrix) <- 0
 
 # Create graph object
-htag_graph <- graph_from_adjacency_matrix(htag_matrix, mode = "undirected", weighted = TRUE)
+htag_graph <- graph_from_adjacency_matrix(htag_matrix, mode = "undirected", 
+                                          weighted = TRUE)
 
 # Let's take a look!
 htag_graph[1:10, 1:10]
