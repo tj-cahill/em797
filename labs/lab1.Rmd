@@ -18,6 +18,8 @@ Let's begin by importing the raw data from Brandwatch (stored in an Excel file),
   - `tidyr` for restructuring data
   - `igraph` for modelling and visualizing our network
   -  `Matrix` for handling sparse matrices
+  
+Note that `dplyr`, `stringr`, and `tidyr` are all included as part of the `tidyverse` package.
 
 ```{r load, message=FALSE}
 library(readxl)
@@ -29,9 +31,12 @@ library(Matrix)
 
 lab <- read_excel("../data/lab.xlsx") %>% 
   rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
+
+# Let's take a look!
+glimpse(lab)
 ```
 
-Looking at the raw data, we can see that there are ```r ncol(lab)``` variable included from Brandwatch, many of which are not relevant to our analysis, or even to this particular context (e.g., `InstagramFollowers`). As we restructure this dataset into various formats for network analysis in the following sections, we will have to pick and choose which variables are necessary in each case. 
+Looking at the raw data, we can see that there are ```r ncol(lab)``` variables included from Brandwatch, many of which are not relevant to our analysis, or even to this particular context (e.g., `InstagramFollowers`). As we restructure this dataset into various formats for network analysis in the following sections, we will have to pick and choose which variables are necessary in each case. 
 
 # Formats for Representing Networks
 
@@ -54,6 +59,9 @@ Note that some of these tweets don't mention any other users, and so we have inc
 ```{r weighted-edges}
 weighted_edges <- edges %>% 
   count(V1, V2, name = "weight")
+
+# Let's take a look!
+head(weighted_edges)
 ```
 
 There will now be no duplicate edges in the list, but user pairs who had multiple interactions in the sample will have a higher weight associated with that edge.
@@ -63,6 +71,9 @@ To conduct later network analysis on the network model we've created, we will ne
 ```{r edgelist2graph}
 mention_graph <- graph_from_data_frame(weighted_edges, directed = TRUE) %>%
   delete_vertices("NA")  # igraph interprets missing values as a string
+
+# Let's take a look!
+E(mention_graph) %>% head()
 ```
 
 ### Adding Node Attributes
@@ -95,6 +106,9 @@ mention_graph <- mention_graph %>%
   set_vertex_attr("verified", index = V(mention_graph), nodes$verified) %>%
   set_vertex_attr("followers", index = V(mention_graph), nodes$followers) %>%
   set_vertex_attr("region", index = V(mention_graph), nodes$region)
+
+# Let's take a look!
+vertex.attributes(mention_graph) %>% glimpse()
 ```
 
 ## Adjacacency Matrix
@@ -104,6 +118,9 @@ It's worth noting that `igraph` can convert back and forth between most major ne
 
 ```{r graph2matrix}
 mention_matrix <- as_adjacency_matrix(mention_graph)
+
+# Let's take a look!
+mention_matrix[0:10, 0:10]
 ```
 
 In addition to modelling interactions between users, we can also look at co-incidence between hashtags as a network. Below, we have some code that generates an adjacency matrix of hashtags based on the Brandwatch data. Unlike the earlier network of mentions, this one will be *undirected*, since it only indicates that two hashtags appeared together in a tweet and the number of times this occurred in the dataset (represented as the *weight* of that edge).
