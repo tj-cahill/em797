@@ -38,6 +38,19 @@ glimpse(lab)
 
 Looking at the raw data, we can see that there are ```r ncol(lab)``` variables included from Brandwatch, many of which are not relevant to our analysis, or even to this particular context (e.g., `InstagramFollowers`). As we restructure this dataset into various formats for network analysis in the following sections, we will have to pick and choose which variables are necessary in each case. 
 
+## Keyword Matching
+Especially when dealing with large social media datasets, you may wish to narrow down the list of observations that you use for constructing your network. By combining the `filter` and `str_detect` functions, we can use regular expressions to check the text of tweets in the dataset for pattern matches and extract a subset of documents to use in the subsequent network analysis.
+
+```{r keywords}
+covid_tweets <- lab %>% 
+  filter(str_detect(FullText, "(?i:(#?covid-?(19)?)|(corona(virus)?)|(pandemic))"))
+
+# Let's take a look!
+covid_tweets %>% 
+  select(FullText) %>% 
+  head()
+```
+
 # Formats for Representing Networks
 
 ## Edge List
@@ -227,18 +240,18 @@ plot(er_graph,
 Now that we have a sense of how to use the `igraph` plotting functions, we can try to apply it to a subset of our real-world dataset. For instance, if we were interested in visualizing how people relate issues with the United States Postal Service to other election topics, we might try to visualize the ego network of the hashtag `#usps`:
 ```{r viz-demo2}
 # This function returns a list of graphs by default
-covid_ego_graph <- make_ego_graph(htag_graph, nodes = "#usps")[[1]]
+usps_ego_graph <- make_ego_graph(htag_graph, nodes = "#usps")[[1]]
 
 # Scale labels to eigenvector centrality and edges to weight
-V(covid_ego_graph)$label.cex <- eigen_centrality(covid_ego_graph)$vector^0.2
-E(covid_ego_graph)$width <- E(covid_ego_graph)$weight*0.01
+V(usps_ego_graph)$label.cex <- eigen_centrality(usps_ego_graph)$vector^0.2
+E(usps_ego_graph)$width <- E(usps_ego_graph)$weight*0.01
 
 # Create a layout with custom parameters
-l <- layout_with_lgl(covid_ego_graph, root = "#usps")
+l <- layout_with_lgl(usps_ego_graph, root = "#usps")
 l <- norm_coords(l, ymin = -1, ymax = 1, xmin = -1, xmax = 1)
 
 
-plot(covid_ego_graph, 
+plot(usps_ego_graph, 
      layout = l,
      rescale = F,
      vertex.shape = "none",
