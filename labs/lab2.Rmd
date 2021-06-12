@@ -9,7 +9,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
 # Loading Data and Required Packages
 Rather than having to re-convert the raw data from Brandwatch into a graph object, we can serialize the existing graph objects from Lab 1 and import them directly into our environment here.
 
@@ -27,3 +26,56 @@ htag_graph <- readRDS("../data/htag_graph.RDS")
 htag_uses_graph <- readRDS("../data/htag_uses_graph.RDS")
 ```
 
+# Node-Level Centrality
+
+## Degree
+```{r degree}
+# Use the degree function to calculate the degree centrality of each node
+degree(mention_graph) %>% head()
+
+# Can be applied to the entire network (as above) or to selected nodes
+degree(htag_graph, v = c("#michigan", "#pennsylvania", "#wisconsin", 
+                         "#minnesota", "#northcarolina", "#arizona"))
+
+# By default, calculates the total degree, but accepts flags for in-degree
+# and out-degree in directed networks
+pol_users <- c("MissouriGOP", "OHDems",
+                     "joebiden", "realdonaldtrump")
+data.frame(deg.out = degree(mention_graph, v = pol_users, mode = "out"),
+           deg.in = degree(mention_graph, v = pol_users, mode = "in"))
+```
+
+```{r degree-append}
+# Append degree centrality as a node-level attribute to store within the graph object
+V(mention_graph)$deg.out <- degree(mention_graph, mode = "out")
+V(mention_graph)$deg.in <- degree(mention_graph, mode = "in")
+V(htag_graph)$deg <- degree(htag_graph, mode = "total")
+
+# Let's take a look!
+vertex_attr_names(mention_graph)
+```
+
+## Strength
+*Weighted degree centrality*, also sometimes called *strength*, can be calculated using the `strength` function
+
+```{r strength}
+
+```
+
+## Betweenness
+
+# Network-Level Measurements
+
+## Size
+
+## Density
+
+## Components
+
+## Degree Distribution
+
+## Average Path Length
+
+## Diameter
+
+## Clustering Coefficient / Transitivity
