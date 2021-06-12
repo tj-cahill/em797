@@ -29,8 +29,10 @@ htag_uses_graph <- readRDS("../data/htag_uses_graph.RDS")
 ```
 
 # Node-Level Centrality
+The `igraph` package has various functions available for calculating various common measures of node-level centrality.
 
 ## Degree
+The most basic option for calculating centrality is by degree, or the number of adjacent nodes. We will use the `degree` function to demonstrate some of the different ways that centrality measures can be handled in R.
 ```{r degree}
 # Use the degree function to calculate the degree centrality of each node
 degree(mention_graph) %>% head()
