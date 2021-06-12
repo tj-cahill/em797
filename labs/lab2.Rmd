@@ -56,10 +56,15 @@ vertex_attr_names(mention_graph)
 ```
 
 ## Strength
-*Weighted degree centrality*, also sometimes called *strength*, can be calculated using the `strength` function
+*Weighted degree centrality*, also sometimes called *strength*, can be calculated using the `strength` function. All of the uses of the `degree` function shown above can also be applied here, and on unweighted networks, `degree` is automatically called instead.
 
 ```{r strength}
+# Compare the weighted and unweighted degree centrality for a weighted network
+V(htag_graph)$deg.weighted <- strength(htag_graph)
 
+data.frame(Node = V(htag_graph)$name,
+           Unweighted = V(htag_graph)$deg,
+           Weighted = V(htag_graph)$deg.weighted) %>% head(20)
 ```
 
 ## Betweenness
