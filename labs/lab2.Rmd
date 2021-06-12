@@ -1,0 +1,29 @@
+---
+title: 'Lab 2: Measuring Networks - Centrality and Global Measures'
+author: "Tiernan Cahill"
+date: "12/06/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Loading Data and Required Packages
+Rather than having to re-convert the raw data from Brandwatch into a graph object, we can serialize the existing graph objects from Lab 1 and import them directly into our environment here.
+
+We will also need to load a few packages for this lab:
+
+  - `magrittr` for handling pipes and enabling tidy workflows
+  - `igraph` for modelling and visualizing our network
+
+```{r load, message = FALSE}
+library(magrittr)
+library(igraph)
+
+mention_graph <- readRDS("../data/mention_graph.RDS")
+htag_graph <- readRDS("../data/htag_graph.RDS")
+htag_uses_graph <- readRDS("../data/htag_uses_graph.RDS")
+```
+

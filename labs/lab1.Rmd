@@ -3,8 +3,8 @@ title: 'Lab 1: Data Formats for Networks'
 author: "Tiernan Cahill"
 date: "09/06/2021"
 output:
-  pdf_document: default
   github_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -263,4 +263,14 @@ plot(usps_ego_graph,
      vertex.label.color = "gray10",
      vertex.label.font = 2,
      edge.color = "gray85")
+```
+
+# Serializing Graph Objects
+
+To avoid repeating ourselves in subsequent labs and having to recreate the graph objects from scratch, we'll serialize them as RDS files that can be loaded directly into other R scripts.
+
+```{r graph-export}
+saveRDS(mention_graph, file = "../data/mention_graph.RDS")
+saveRDS(htag_graph, file = "../data/htag_graph.RDS")
+saveRDS(htag_uses_graph, file = "../data/htag_uses_graph.RDS")
 ```
