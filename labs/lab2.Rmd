@@ -15,10 +15,12 @@ Rather than having to re-convert the raw data from Brandwatch into a graph objec
 We will also need to load a few packages for this lab:
 
   - `magrittr` for handling pipes and enabling tidy workflows
+  - `dplyr` for wrangling data
   - `igraph` for modelling and visualizing our network
 
 ```{r load, message = FALSE}
 library(magrittr)
+library(dplyr)
 library(igraph)
 
 mention_graph <- readRDS("../data/mention_graph.RDS")
@@ -68,6 +70,20 @@ data.frame(Node = V(htag_graph)$name,
 ```
 
 ## Betweenness
+Likewise, the `betweenness` function can be used to calculate the *betweenness centrality* of each node. Recall that betweenness counts the number of geodesics that pass through a given node. The `betweenness` function take edge weights into consideration by default (if the network is weighted), but this can be disabled by setting `weights = FALSE`.
+
+```{r betweenness}
+V(mention_graph)$betweenness <- betweenness(mention_graph, directed = TRUE)
+
+# Let's take a look!
+mention_centralities <- vertex.attributes(mention_graph) %>% 
+  as.data.frame() %>% 
+  select(name, deg.out, deg.in, betweenness)
+
+mention_centralities %>% 
+  arrange(desc(betweenness)) %>%
+  head(20)
+```
 
 # Network-Level Measurements
 
