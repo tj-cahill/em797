@@ -81,18 +81,8 @@ head(weighted_edges)
 
 There will now be no duplicate edges in the list, but user pairs who had multiple interactions in the sample will have a higher weight associated with that edge.
 
-### Converting to a Network
-To conduct later network analysis on the network model we've created, we will need to convert it into a *graph object* that the tools from the `igraph` package can understand. (Also, this is a good place to point out that `igraph` functions refer to nodes as *vertices*.)
-```{r edgelist2graph}
-mention_graph <- graph_from_data_frame(weighted_edges, directed = TRUE) %>%
-  delete_vertices("NA")  # igraph interprets missing values as a string
-
-# Let's take a look!
-E(mention_graph) %>% head()
-```
-
 ### Adding Node Attributes
-In some situations, we may want a graph object to include attributes associated with the nodes in a network that are not directly related to the network structure (e.g., the number of followers a particular Twitter user has, or the location they have added to their profile). To add these variables to the `igraph` object, we first need to extract them from the existing dataset and make sure that they are appropriately formatted (i.e., in alphabetical order of node ID and without duplicates).
+In some situations, we may want a graph object to include attributes associated with the nodes in a network that are not directly related to the network structure (e.g., the number of followers a particular Twitter user has, or the location they have added to their profile). To add these variables to the `igraph` object, we first need to extract them from the existing dataset and make sure that they are appropriately formatted.
 
 ```{r node-attr}
 nodes <- lab %>%
@@ -111,20 +101,22 @@ mentioned_nodes <- lab %>%
 nodes <- nodes %>% 
   bind_rows(mentioned_nodes) %>%
   distinct(id, .keep_all = T) %>%
-  arrange(id) %>%
-  .[-1,]          # Remove empty row created by isolates
+  arrange(id)   
+```
 
-# Before adding variables to the graph object, check and make sure that the lists line up
-cbind(names(V(mention_graph)), nodes$id) %>% head()
-vcount(mention_graph) == nrow(nodes)
+### Converting to a Network
+To conduct later network analysis on the network model we've created, we will need to convert it into a *graph object* that the tools from the `igraph` package can understand. (Also, this is a good place to point out that `igraph` functions refer to nodes as *vertices*.)
+```{r edgelist2graph}
+# To avoid misassigning vertex attributes due to inconsistent ordering of node
+# lists, we can instead create an entirely new graph object that incorporates
+# both our existing edge list and our new node list (with attributes)
 
-# If the above checks out, set vertex attributes from the node list
-mention_graph <- mention_graph %>%
-  set_vertex_attr("verified", index = V(mention_graph), nodes$verified) %>%
-  set_vertex_attr("followers", index = V(mention_graph), nodes$followers) %>%
-  set_vertex_attr("region", index = V(mention_graph), nodes$region)
+mention_graph <- graph_from_data_frame(weighted_edges, directed = T, vertices = nodes) %>%
+  delete_vertices("NA") # igraph interprets missing values as a string
 
 # Let's take a look!
+E(mention_graph) %>% head()
+V(mention_graph) %>% head()
 vertex.attributes(mention_graph) %>% glimpse()
 ```
 

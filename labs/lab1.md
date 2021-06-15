@@ -36,86 +36,86 @@ glimpse(lab)
 
     ## Rows: 5,000
     ## Columns: 80
-    ## $ ...1                       <chr> "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18~
-    ## $ Date                       <chr> "2020-11-02 18:51:36.0", "2020-10-16 11:20:02.0", "2020-09-14 16:02:29.0", "2020-10-24 02:28:22.~
-    ## $ Title                      <chr> "please go vote or turn in mail ballot! #Election2020", "RT @TexasGOP Report any irregularities ~
-    ## $ Url                        <chr> "http://twitter.com/jackiezgonzalez/statuses/1323336977547030529", "http://twitter.com/janesmi41~
-    ## $ Domain                     <chr> "twitter.com", "twitter.com", "twitter.com", "twitter.com", "twitter.com", "twitter.com", "twitt~
-    ## $ Sentiment                  <chr> "positive", "neutral", "neutral", "neutral", "positive", "neutral", "neutral", "neutral", "neutr~
-    ## $ PageType                   <chr> "twitter", "twitter", "twitter", "twitter", "twitter", "twitter", "twitter", "twitter", "twitter~
-    ## $ Language                   <chr> "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", ~
-    ## $ CountryCode                <chr> "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA"~
-    ## $ ContinentCode              <chr> "NORTH AMERICA", "NORTH AMERICA", "NORTH AMERICA", "NORTH AMERICA", "NORTH AMERICA", "NORTH AMER~
-    ## $ Continent                  <chr> "North America", "North America", "North America", "North America", "North America", "North Amer~
-    ## $ Country                    <chr> "United States of America", "United States of America", "United States of America", "United Stat~
-    ## $ CityCode                   <chr> NA, NA, "USA.NY.New York", NA, "USA.NM.Albuquerque", "USA.NY.New York", NA, NA, NA, NA, NA, "USA~
-    ## $ AccountType                <chr> "individual", "individual", "individual", "individual", "individual", "individual", "individual"~
-    ## $ Added                      <chr> "2020-11-02T18:57:17.232+0000", "2020-10-24T20:41:41.167+0000", "2020-09-14T16:05:15.976+0000", ~
-    ## $ Assignment                 <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ Author                     <chr> "jackiezgonzalez", "janesmi41542442", "mmcthemonitor", "CJWarner1", "NMSecOfState", "Cindy_ocean~
-    ## $ Avatar                     <chr> "https://audiences.brandwatch.com/api/audiences/v1/avatars/twitter/2170837448?token=3ca60bde9cda~
-    ## $ CategoryDetails            <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ Checked                    <chr> "false", "false", "false", "false", "false", "false", "false", "false", "false", "false", "false~
-    ## $ City                       <chr> NA, NA, "New York", NA, "Albuquerque", "New York", NA, NA, NA, NA, NA, "New York", "Buffalo", "W~
-    ## $ DisplayURLs                <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ ExpandedURLs               <chr> NA, NA, NA, "https://www.washingtonexaminer.com/opinion/joe-biden-is-lying-his-ukraine-policy-cr~
-    ## $ FacebookAuthorID           <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ FacebookComments           <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ FacebookLikes              <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ FacebookRole               <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ FacebookShares             <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ FacebookSubtype            <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ FullName                   <chr> "jackiezgonzalez (jackie g <U+200E><U+2735>)", "janesmi41542442 (jaynesmith)", "mmcthemonitor (The Monitor)", "~
-    ## $ FullText                   <chr> "please go vote or turn in mail ballot! #Election2020", "RT @TexasGOP Report any irregularities ~
-    ## $ Gender                     <chr> "female", "unknown", "unknown", "unknown", "unknown", "unknown", "unknown", "female", NA, "unkno~
-    ## $ Hashtags                   <chr> "#election2020", "#earlyvoting, #vote, #election2020", "#mmcthemonitor, #marymountmahattan, #nyc~
-    ## $ Impact                     <dbl> 4.9, 0.0, 0.0, 12.9, 51.9, 0.0, 0.0, 0.0, 61.4, 6.2, 29.7, 27.3, 0.0, 3.4, 38.1, 81.6, 0.0, 3.1,~
-    ## $ Impressions                <dbl> 952, 882, 384, 3807, 31827, 30, 573, 589, 341429, 2995, 8113, 6627, 14, 2233, 18346, 2049264, 96~
-    ## $ InstagramComments          <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ InstagramFollowers         <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ InstagramFollowing         <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ InstagramInteractionsCount <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ InstagramLikes             <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ InstagramPosts             <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ Interest                   <chr> NA, "Family & Parenting", NA, "Politics", NA, NA, "Sports", NA, "Business, Politics", "Beauty/He~
-    ## $ LastAssignmentDate         <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ Latitude                   <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ LocationName               <chr> "CA, USA", "USA", "New York, NY, USA", "USA", "Albuquerque, NM, USA", "New York, NY, USA", "USA"~
-    ## $ Longitude                  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ MediaFilter                <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ MediaURLs                  <chr> NA, "http://pbs.twimg.com/media/EkX-XyfWsAAvQCo.jpg", "http://pbs.twimg.com/media/Eh4zE0TWsAAxhZ~
-    ## $ MentionedAuthors           <chr> NA, "@texasgop", "@seamusfallon3", "@derekdob", NA, "@warroompandemic, @realdonaldtrump<U+2069>, @mariab~
-    ## $ OriginalUrl                <chr> "http://twitter.com/jackiezgonzalez/statuses/1323336977547030529", "http://twitter.com/TexasGOP/~
-    ## $ Priority                   <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ Professions                <chr> NA, NA, NA, NA, "{profession=Politician, jobTitle=Secretary of State}", NA, NA, NA, NA, NA, NA, ~
-    ## $ ResourceId                 <chr> "15b33814193546ecc6bee3a1b6b6cbcb", "299671a225b603e6b52cd7d2fe373ee0", "fc95d6f51b65bcb94d5ef19~
-    ## $ ShortURLs                  <chr> NA, "https://t.co/KLfMAFKBIZ", "https://t.co/yShRSWemUh", "https://t.co/x5ss0ERijJ", "https://t.~
-    ## $ Starred                    <chr> "false", "false", "false", "false", "false", "false", "false", "false", "false", "false", "false~
-    ## $ Status                     <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ Subtype                    <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ ThreadAuthor               <chr> NA, "TexasGOP", NA, "derekdob", NA, "WarRoomPandemic", "SammiG0203", "WarRoomPandemic", "MMassal~
-    ## $ ThreadCreatedDate          <chr> NA, "2020-10-15T13:50:58.000+0000", NA, "2020-10-23T12:20:37.000+0000", NA, "2020-10-27T11:57:01~
-    ## $ ThreadEntryType            <chr> "post", "share", "post", "share", "post", "share", "share", "share", "share", "share", "share", ~
-    ## $ ThreadId                   <chr> "0", "1316738339278663686", "0", "1319614706240335873", "0", "1321058315489710086", "13175349713~
-    ## $ ThreadURL                  <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ TotalMonthlyVisitors       <dbl> 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09~
-    ## $ TwitterAuthorID            <chr> "2170837448", "827502320162201600", "217612902", "542071766", "806695193873358852", "12559963678~
-    ## $ TwitterChannelRole         <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ TwitterFollowers           <dbl> 697, 882, 384, 3807, 2768, 30, 573, 589, 341429, 2995, 8113, 6627, 14, 2233, 18346, 17762, 961, ~
-    ## $ TwitterFollowing           <dbl> 199, 371, 294, 4058, 283, 96, 1125, 275, 206082, 3968, 6459, 2765, 208, 5001, 12877, 10904, 298,~
-    ## $ TwitterReplyCount          <dbl> 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ TwitterReplyto             <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "http://twitter.com/Keen_James/statuses/1320~
-    ## $ TwitterRetweetof           <chr> NA, "http://twitter.com/TexasGOP/statuses/1316738339278663686", NA, "http://twitter.com/derekdob~
-    ## $ TwitterRetweets            <dbl> 1, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ TwitterTweets              <dbl> 20172, 93031, 1227, 136367, 1275, 1277, 5421, 95096, 399832, 39140, 117772, 476947, 410, 173773,~
-    ## $ TwitterVerified            <chr> "false", "false", "false", "false", "true", "false", "false", "false", "false", "false", "false"~
-    ## $ Updated                    <chr> "2020-11-02T21:22:10.883+0000", "2020-10-24T20:41:41.167+0000", "2020-09-14T16:05:15.976+0000", ~
-    ## $ `Reach(new)`               <dbl> 358, 0, 0, 2423, 10037, 0, 0, 0, 27532, 1927, 4312, 3754, 0, 1376, 7043, 47419, 92, 1324, 6705, ~
-    ## $ Copyright                  <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, ~
-    ## $ PageTypeName               <chr> "Twitter", "Twitter", "Twitter", "Twitter", "Twitter", "Twitter", "Twitter", "Twitter", "Twitter~
-    ## $ RedditScore                <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ~
-    ## $ Region                     <chr> "California", NA, "New York", NA, "New Mexico", "New York", NA, "Texas", "Texas", "Arizona", "Fl~
-    ## $ RegionCode                 <chr> "USA.CA", NA, "USA.NY", NA, "USA.NM", "USA.NY", NA, "USA.TX", "USA.TX", "USA.AZ", "USA.FL", "USA~
+    ## $ ...1                       <chr> "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",~
+    ## $ Date                       <chr> "2020-11-02 18:51:36.0", "2020-10-16 11:20:02.0", "2020-09-14 16:02:29.0",~
+    ## $ Title                      <chr> "please go vote or turn in mail ballot! #Election2020", "RT @TexasGOP Repo~
+    ## $ Url                        <chr> "http://twitter.com/jackiezgonzalez/statuses/1323336977547030529", "http:/~
+    ## $ Domain                     <chr> "twitter.com", "twitter.com", "twitter.com", "twitter.com", "twitter.com",~
+    ## $ Sentiment                  <chr> "positive", "neutral", "neutral", "neutral", "positive", "neutral", "neutr~
+    ## $ PageType                   <chr> "twitter", "twitter", "twitter", "twitter", "twitter", "twitter", "twitter~
+    ## $ Language                   <chr> "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "en", "e~
+    ## $ CountryCode                <chr> "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA", "USA~
+    ## $ ContinentCode              <chr> "NORTH AMERICA", "NORTH AMERICA", "NORTH AMERICA", "NORTH AMERICA", "NORTH~
+    ## $ Continent                  <chr> "North America", "North America", "North America", "North America", "North~
+    ## $ Country                    <chr> "United States of America", "United States of America", "United States of ~
+    ## $ CityCode                   <chr> NA, NA, "USA.NY.New York", NA, "USA.NM.Albuquerque", "USA.NY.New York", NA~
+    ## $ AccountType                <chr> "individual", "individual", "individual", "individual", "individual", "ind~
+    ## $ Added                      <chr> "2020-11-02T18:57:17.232+0000", "2020-10-24T20:41:41.167+0000", "2020-09-1~
+    ## $ Assignment                 <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ Author                     <chr> "jackiezgonzalez", "janesmi41542442", "mmcthemonitor", "CJWarner1", "NMSec~
+    ## $ Avatar                     <chr> "https://audiences.brandwatch.com/api/audiences/v1/avatars/twitter/2170837~
+    ## $ CategoryDetails            <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ Checked                    <chr> "false", "false", "false", "false", "false", "false", "false", "false", "f~
+    ## $ City                       <chr> NA, NA, "New York", NA, "Albuquerque", "New York", NA, NA, NA, NA, NA, "Ne~
+    ## $ DisplayURLs                <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ ExpandedURLs               <chr> NA, NA, NA, "https://www.washingtonexaminer.com/opinion/joe-biden-is-lying~
+    ## $ FacebookAuthorID           <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ FacebookComments           <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ FacebookLikes              <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ FacebookRole               <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ FacebookShares             <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ FacebookSubtype            <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ FullName                   <chr> "jackiezgonzalez (jackie g <U+200E><U+2735>)", "janesmi41542442 (jaynesmith)", "mmcthemon~
+    ## $ FullText                   <chr> "please go vote or turn in mail ballot! #Election2020", "RT @TexasGOP Repo~
+    ## $ Gender                     <chr> "female", "unknown", "unknown", "unknown", "unknown", "unknown", "unknown"~
+    ## $ Hashtags                   <chr> "#election2020", "#earlyvoting, #vote, #election2020", "#mmcthemonitor, #m~
+    ## $ Impact                     <dbl> 4.9, 0.0, 0.0, 12.9, 51.9, 0.0, 0.0, 0.0, 61.4, 6.2, 29.7, 27.3, 0.0, 3.4,~
+    ## $ Impressions                <dbl> 952, 882, 384, 3807, 31827, 30, 573, 589, 341429, 2995, 8113, 6627, 14, 22~
+    ## $ InstagramComments          <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ InstagramFollowers         <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ InstagramFollowing         <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ InstagramInteractionsCount <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ InstagramLikes             <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ InstagramPosts             <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ Interest                   <chr> NA, "Family & Parenting", NA, "Politics", NA, NA, "Sports", NA, "Business,~
+    ## $ LastAssignmentDate         <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ Latitude                   <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ LocationName               <chr> "CA, USA", "USA", "New York, NY, USA", "USA", "Albuquerque, NM, USA", "New~
+    ## $ Longitude                  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ MediaFilter                <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ MediaURLs                  <chr> NA, "http://pbs.twimg.com/media/EkX-XyfWsAAvQCo.jpg", "http://pbs.twimg.co~
+    ## $ MentionedAuthors           <chr> NA, "@texasgop", "@seamusfallon3", "@derekdob", NA, "@warroompandemic, @re~
+    ## $ OriginalUrl                <chr> "http://twitter.com/jackiezgonzalez/statuses/1323336977547030529", "http:/~
+    ## $ Priority                   <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ Professions                <chr> NA, NA, NA, NA, "{profession=Politician, jobTitle=Secretary of State}", NA~
+    ## $ ResourceId                 <chr> "15b33814193546ecc6bee3a1b6b6cbcb", "299671a225b603e6b52cd7d2fe373ee0", "f~
+    ## $ ShortURLs                  <chr> NA, "https://t.co/KLfMAFKBIZ", "https://t.co/yShRSWemUh", "https://t.co/x5~
+    ## $ Starred                    <chr> "false", "false", "false", "false", "false", "false", "false", "false", "f~
+    ## $ Status                     <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ Subtype                    <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ ThreadAuthor               <chr> NA, "TexasGOP", NA, "derekdob", NA, "WarRoomPandemic", "SammiG0203", "WarR~
+    ## $ ThreadCreatedDate          <chr> NA, "2020-10-15T13:50:58.000+0000", NA, "2020-10-23T12:20:37.000+0000", NA~
+    ## $ ThreadEntryType            <chr> "post", "share", "post", "share", "post", "share", "share", "share", "shar~
+    ## $ ThreadId                   <chr> "0", "1316738339278663686", "0", "1319614706240335873", "0", "132105831548~
+    ## $ ThreadURL                  <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ TotalMonthlyVisitors       <dbl> 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+09, 6e+0~
+    ## $ TwitterAuthorID            <chr> "2170837448", "827502320162201600", "217612902", "542071766", "80669519387~
+    ## $ TwitterChannelRole         <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ TwitterFollowers           <dbl> 697, 882, 384, 3807, 2768, 30, 573, 589, 341429, 2995, 8113, 6627, 14, 223~
+    ## $ TwitterFollowing           <dbl> 199, 371, 294, 4058, 283, 96, 1125, 275, 206082, 3968, 6459, 2765, 208, 50~
+    ## $ TwitterReplyCount          <dbl> 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ TwitterReplyto             <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "http://twitter.com/Ke~
+    ## $ TwitterRetweetof           <chr> NA, "http://twitter.com/TexasGOP/statuses/1316738339278663686", NA, "http:~
+    ## $ TwitterRetweets            <dbl> 1, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ TwitterTweets              <dbl> 20172, 93031, 1227, 136367, 1275, 1277, 5421, 95096, 399832, 39140, 117772~
+    ## $ TwitterVerified            <chr> "false", "false", "false", "false", "true", "false", "false", "false", "fa~
+    ## $ Updated                    <chr> "2020-11-02T21:22:10.883+0000", "2020-10-24T20:41:41.167+0000", "2020-09-1~
+    ## $ `Reach(new)`               <dbl> 358, 0, 0, 2423, 10037, 0, 0, 0, 27532, 1927, 4312, 3754, 0, 1376, 7043, 4~
+    ## $ Copyright                  <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA~
+    ## $ PageTypeName               <chr> "Twitter", "Twitter", "Twitter", "Twitter", "Twitter", "Twitter", "Twitter~
+    ## $ RedditScore                <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,~
+    ## $ Region                     <chr> "California", NA, "New York", NA, "New Mexico", "New York", NA, "Texas", "~
+    ## $ RegionCode                 <chr> "USA.CA", NA, "USA.NY", NA, "USA.NM", "USA.NY", NA, "USA.TX", "USA.TX", "U~
 
 Looking at the raw data, we can see that there are `80` variables
 included from Brandwatch, many of which are not relevant to our
@@ -144,13 +144,13 @@ covid_tweets %>%
 ```
 
     ## # A tibble: 6 x 1
-    ##   FullText                                                                                                                           
-    ##   <chr>                                                                                                                              
-    ## 1 RT @WarRoomPandemic #SteveBannon predicts a <U+2066>@realDonaldTrump<U+2069> victory in #Election2020 Bannon tells @MariaBartiromo: “President Tru~
-    ## 2 RT @WarRoomPandemic Bannon: @JoeBiden's campaign has no scalability. You can't just 'COVID' this and fire people up digitally. The~
-    ## 3 Just like that...there was no more Flu ??...#COVID19 #coronavirus #plandemic #MediaWatch #Election2020 @DonaldJTrumpJr https://t.c~
-    ## 4 RT @JohnVetsResist1 Have had to do. As I sit here in a puddle of tears I'm frozen in thought but thinking I did the right thing. I~
-    ## 5 RT @AprilDRyan Who would have ever thought that @realDonaldTrump & @MelaniaTrump testing positive for #COVID19 would be the Octobe~
+    ##   FullText                                                                                                     
+    ##   <chr>                                                                                                        
+    ## 1 RT @WarRoomPandemic #SteveBannon predicts a <U+2066>@realDonaldTrump<U+2069> victory in #Election2020 Bannon tells @MariaBar~
+    ## 2 RT @WarRoomPandemic Bannon: @JoeBiden's campaign has no scalability. You can't just 'COVID' this and fire pe~
+    ## 3 Just like that...there was no more Flu ??...#COVID19 #coronavirus #plandemic #MediaWatch #Election2020 @Dona~
+    ## 4 RT @JohnVetsResist1 Have had to do. As I sit here in a puddle of tears I'm frozen in thought but thinking I ~
+    ## 5 RT @AprilDRyan Who would have ever thought that @realDonaldTrump & @MelaniaTrump testing positive for #COVID~
     ## 6 RT @DrThomasPaul #COVID19 officially ends on November 4, 2020. #Election2020
 
 # Formats for Representing Networks
@@ -213,25 +213,6 @@ There will now be no duplicate edges in the list, but user pairs who had
 multiple interactions in the sample will have a higher weight associated
 with that edge.
 
-### Converting to a Network
-
-To conduct later network analysis on the network model we’ve created, we
-will need to convert it into a *graph object* that the tools from the
-`igraph` package can understand. (Also, this is a good place to point
-out that `igraph` functions refer to nodes as *vertices*.)
-
-``` r
-mention_graph <- graph_from_data_frame(weighted_edges, directed = TRUE) %>%
-  delete_vertices("NA")  # igraph interprets missing values as a string
-
-# Let's take a look!
-E(mention_graph) %>% head()
-```
-
-    ## + 6/8038 edges from d080e15 (vertex names):
-    ## [1] ___Dustin__   ->jorgensen4potus __Ladderman421->danscavino      __MrSwift__   ->hdrewgalloway   __Princess__Q ->joebiden       
-    ## [5] __Princess__Q ->leandroshan     __ruthlesss__ ->bbcjonsopel
-
 ### Adding Node Attributes
 
 In some situations, we may want a graph object to include attributes
@@ -240,8 +221,7 @@ the network structure (e.g., the number of followers a particular
 Twitter user has, or the location they have added to their profile). To
 add these variables to the `igraph` object, we first need to extract
 them from the existing dataset and make sure that they are appropriately
-formatted (i.e., in alphabetical order of node ID and without
-duplicates).
+formatted.
 
 ``` r
 nodes <- lab %>%
@@ -260,43 +240,48 @@ mentioned_nodes <- lab %>%
 nodes <- nodes %>% 
   bind_rows(mentioned_nodes) %>%
   distinct(id, .keep_all = T) %>%
-  arrange(id) %>%
-  .[-1,]          # Remove empty row created by isolates
-
-# Before adding variables to the graph object, check and make sure that the lists line up
-cbind(names(V(mention_graph)), nodes$id) %>% head()
+  arrange(id)   
 ```
 
-    ##      [,1]             [,2]            
-    ## [1,] "___Dustin__"    "___Dustin__"   
-    ## [2,] "__Ladderman421" "__Ladderman421"
-    ## [3,] "__MrSwift__"    "__MrSwift__"   
-    ## [4,] "__Princess__Q"  "__Princess__Q" 
-    ## [5,] "__ruthlesss__"  "__ruthlesss__" 
-    ## [6,] "_ACHP"          "_ACHP"
+### Converting to a Network
+
+To conduct later network analysis on the network model we’ve created, we
+will need to convert it into a *graph object* that the tools from the
+`igraph` package can understand. (Also, this is a good place to point
+out that `igraph` functions refer to nodes as *vertices*.)
 
 ``` r
-vcount(mention_graph) == nrow(nodes)
-```
+# To avoid misassigning vertex attributes due to inconsistent ordering of node
+# lists, we can instead create an entirely new graph object that incorporates
+# both our existing edge list and our new node list (with attributes)
 
-    ## [1] TRUE
-
-``` r
-# If the above checks out, set vertex attributes from the node list
-mention_graph <- mention_graph %>%
-  set_vertex_attr("verified", index = V(mention_graph), nodes$verified) %>%
-  set_vertex_attr("followers", index = V(mention_graph), nodes$followers) %>%
-  set_vertex_attr("region", index = V(mention_graph), nodes$region)
+mention_graph <- graph_from_data_frame(weighted_edges, directed = T, vertices = nodes) %>%
+  delete_vertices("NA") # igraph interprets missing values as a string
 
 # Let's take a look!
+E(mention_graph) %>% head()
+```
+
+    ## + 6/8038 edges from 6bef835 (vertex names):
+    ## [1] ___Dustin__   ->jorgensen4potus __Ladderman421->danscavino      __MrSwift__   ->hdrewgalloway  
+    ## [4] __Princess__Q ->joebiden        __Princess__Q ->leandroshan     __ruthlesss__ ->bbcjonsopel
+
+``` r
+V(mention_graph) %>% head()
+```
+
+    ## + 6/7620 vertices, named, from 6bef835:
+    ## [1]                ___Dustin__    __Ladderman421 __MrSwift__    __Princess__Q  __ruthlesss__
+
+``` r
 vertex.attributes(mention_graph) %>% glimpse()
 ```
 
     ## List of 4
-    ##  $ name     : chr [1:7620] "___Dustin__" "__Ladderman421" "__MrSwift__" "__Princess__Q" ...
-    ##  $ verified : logi [1:7620] FALSE FALSE FALSE FALSE FALSE FALSE ...
-    ##  $ followers: num [1:7620] 67 186 1000 2032 305 ...
-    ##  $ region   : int [1:7620] 44 5 44 29 5 9 NA NA 11 NA ...
+    ##  $ name     : chr [1:7620] "" "___Dustin__" "__Ladderman421" "__MrSwift__" ...
+    ##  $ verified : logi [1:7620] NA FALSE FALSE FALSE FALSE FALSE ...
+    ##  $ followers: num [1:7620] NA 67 186 1000 2032 ...
+    ##  $ region   : chr [1:7620] NA "Texas" "California" "Texas" ...
 
 ## Adjacacency Matrix
 
@@ -318,19 +303,19 @@ mention_matrix[0:10, 0:10]
 
     ## 10 x 10 sparse Matrix of class "dgCMatrix"
 
-    ##    [[ suppressing 10 column names '___Dustin__', '__Ladderman421', '__MrSwift__' ... ]]
+    ##    [[ suppressing 10 column names '', '___Dustin__', '__Ladderman421' ... ]]
 
-    ##                                    
-    ## ___Dustin__     . . . . . . . . . .
-    ## __Ladderman421  . . . . . . . . . .
-    ## __MrSwift__     . . . . . . . . . .
-    ## __Princess__Q   . . . . . . . . . .
-    ## __ruthlesss__   . . . . . . . . . .
-    ## _ACHP           . . . . . . . . . .
-    ## _asyan          . . . . . . . . . .
-    ## _BayleeRobinson . . . . . . . . . .
-    ## _Bec_Smith      . . . . . . . . . .
-    ## _Burky          . . . . . . . . . .
+    ##                                   
+    ##                . . . . . . . . . .
+    ## ___Dustin__    . . . . . . . . . .
+    ## __Ladderman421 . . . . . . . . . .
+    ## __MrSwift__    . . . . . . . . . .
+    ## __Princess__Q  . . . . . . . . . .
+    ## __ruthlesss__  . . . . . . . . . .
+    ## _ACHP          . . . . . . . . . .
+    ## _alex_myers_   . . . . . . . . . .
+    ## _ashdashlee_   . . . . . . . . . .
+    ## _asyan         . . . . . . . . . .
 
 In addition to modelling interactions between users, we can also look at
 co-incidence between hashtags as a network. Below, we have some code
@@ -407,21 +392,21 @@ htag_list %>% head(3)
 ```
 
     ## $`#election2020`
-    ## + 3158/3181 vertices, named, from d1b32d8:
-    ##    [1] #earlyvoting                             #vote                                    #mmcthemonitor                          
-    ##    [4] #marymountmahattan                       #nyc                                     #politics                               
-    ##    [7] #bidencrimefamilyexposed                 #debate2020                              #presidentialdebate                     
-    ##   [10] #joebideniscorrupt                       #walkaway                                #biden2020                              
-    ##   [13] #joebidenlies                            #stopvotingfordemocrats                  #demexit                                
-    ##   [16] #nmpol                                   #stevebannon                             #warroompandemic                        
-    ##   [19] #bidenharris2020                         #trumppence2020                          #voteearly                              
-    ##   [22] #evildems                                #trumpnation2020                         #maga                                   
-    ##   [25] #facebook                                #trump                                   #larrysharpe                            
-    ##   [28] #libertarian                             #liberty                                 #democrat                               
+    ## + 3158/3181 vertices, named, from 6d37061:
+    ##    [1] #earlyvoting                             #vote                                   
+    ##    [3] #mmcthemonitor                           #marymountmahattan                      
+    ##    [5] #nyc                                     #politics                               
+    ##    [7] #bidencrimefamilyexposed                 #debate2020                             
+    ##    [9] #presidentialdebate                      #joebideniscorrupt                      
+    ##   [11] #walkaway                                #biden2020                              
+    ##   [13] #joebidenlies                            #stopvotingfordemocrats                 
+    ##   [15] #demexit                                 #nmpol                                  
+    ##   [17] #stevebannon                             #warroompandemic                        
+    ##   [19] #bidenharris2020                         #trumppence2020                         
     ## + ... omitted several vertices
     ## 
     ## $`#earlyvoting`
-    ## + 112/3181 vertices, named, from d1b32d8:
+    ## + 112/3181 vertices, named, from 6d37061:
     ##   [1] #election2020             #vote                     #nyc                      #bidenharris2020         
     ##   [5] #voteearly                #maga                     #trump                    #liberty                 
     ##   [9] #republicans              #leadright                #covid19                  #biden                   
@@ -435,17 +420,17 @@ htag_list %>% head(3)
     ## + ... omitted several vertices
     ## 
     ## $`#vote`
-    ## + 861/3181 vertices, named, from d1b32d8:
-    ##   [1] #election2020                   #earlyvoting                    #nyc                            #politics                      
-    ##   [5] #debate2020                     #presidentialdebate             #walkaway                       #biden2020                     
-    ##   [9] #bidenharris2020                #trumppence2020                 #voteearly                      #maga                          
-    ##  [13] #trump                          #larrysharpe                    #libertarian                    #liberty                       
-    ##  [17] #democrat                       #republicans                    #debates2020                    #blackvoicesfortrump           
-    ##  [21] #blackvote                      #platinumplan                   #gop                            #promisesmadepromiseskept      
-    ##  [25] #iwillvote                      #leadright                      #chinaownsbiden                 #chinaownsalldemocrats         
-    ##  [29] #votered2020                    #removeeverydemocrat            #americafirst                   #covid19                       
-    ##  [33] #coronavirus                    #biden                          #qanon2018                      #qanon2020                     
-    ##  [37] #trump2020                      #votetrumpout                   #usa                            #elections                     
+    ## + 861/3181 vertices, named, from 6d37061:
+    ##   [1] #election2020                   #earlyvoting                    #nyc                           
+    ##   [4] #politics                       #debate2020                     #presidentialdebate            
+    ##   [7] #walkaway                       #biden2020                      #bidenharris2020               
+    ##  [10] #trumppence2020                 #voteearly                      #maga                          
+    ##  [13] #trump                          #larrysharpe                    #libertarian                   
+    ##  [16] #liberty                        #democrat                       #republicans                   
+    ##  [19] #debates2020                    #blackvoicesfortrump            #blackvote                     
+    ##  [22] #platinumplan                   #gop                            #promisesmadepromiseskept      
+    ##  [25] #iwillvote                      #leadright                      #chinaownsbiden                
+    ##  [28] #chinaownsalldemocrats          #votered2020                    #removeeverydemocrat           
     ## + ... omitted several vertices
 
 ## Affiliation Matrix
@@ -480,7 +465,7 @@ htag_uses_graph <- graph_from_incidence_matrix(htag_uses_matrix, mode = "out")
 E(htag_uses_graph) %>% head(20)
 ```
 
-    ## + 20/16051 edges from d2a9f4a (vertex names):
+    ## + 20/16051 edges from 6e44154 (vertex names):
     ##  [1] beckya57       --#<U+03C9>         GrassrootsDNC  --#<U+03C9>         snowstormyou   --#<U+03C9>        
     ##  [4] eafinct        --#<U+6295><U+7968> NIHAustin      --#<U+6295><U+7968> oceanfootbaII  --#<U+6295><U+7968>
     ##  [7] MANMWA2        --#101nights        RealClelland   --#10milliondreams  JMelaniaKC     --#12moreyears     
