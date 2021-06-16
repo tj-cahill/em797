@@ -102,6 +102,18 @@ ecount(htag_graph)
 edge_density(mention_graph, loops = F)
 ```
 
+## Degree Distribution
+```{r degree-distribution}
+degree_distribution(htag_graph) %>% glimpse()
+
+# Visualize the distribution on a plot
+degree_distribution(htag_graph) %>% plot(xlim = c(1, 40), 
+                                         type = "o", pch = 19, col = "blue",
+                                         xlab = "Degree", 
+                                         ylab = "Density",
+                                         frame = F)
+```
+
 ## Diameter
 ```{r diameter}
 # Calculate diameter
@@ -117,17 +129,18 @@ diameter(mention_graph.unweighted, directed = T)
 get_diameter(mention_graph.unweighted)
 ```
 
-## Degree Distribution
-```{r degree-distribution}
-degree_distribution(htag_graph) %>% glimpse()
+## Average Path Length
+```{r path-length}
+mean_distance(mention_graph, directed = T)
+mean_distance(htag_graph, directed = F)
 
-# Visualize the distribution on a plot
-degree_distribution(htag_graph) %>% plot(xlim = c(1, 40), 
-                                         type = "o", pch = 19, col = "blue",
-                                         xlab = "Degree", 
-                                         ylab = "Density",
-                                         frame = F)
+# Can also use related functions to figure out the shortest path between nodes
+shortest_paths(mention_graph, 
+               from = "dailycaller", to = "realdonaldtrump", 
+               mode = "all")$vpath
 ```
+
+
 
 ## Components
 ```{r components}
@@ -155,19 +168,6 @@ V(mention_graphs[[1]]) %>% head()
 V(mention_graphs[[2]]) %>% head()
 V(mention_graphs[[3]]) %>% head()
 ```
-
-## Average Path Length
-```{r path-length}
-mean_distance(mention_graph, directed = T)
-mean_distance(htag_graph, directed = F)
-
-# Can also use related functions to figure out the shortest path between nodes
-shortest_paths(mention_graph, 
-               from = "dailycaller", to = "realdonaldtrump", 
-               mode = "all")$vpath
-```
-
-
 
 ## Clustering Coefficient / Transitivity
 ```{r }
