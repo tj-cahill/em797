@@ -192,4 +192,17 @@ V(htag_graph)$clustering <- transitivity(htag_graph, type = "local", isolates = 
 
 # Let's take a look!
 vertex_attr(htag_graph, "clustering", "#usps")
+
+# Apply clustering coefficient in a visualization
+# ===============================================
+
+usps_ego_graph <- make_ego_graph(htag_graph, nodes = "#usps")[[1]]
+
+# Scale nodes to clustering coefficient
+V(usps_ego_graph)$size <- vertex_attr(usps_ego_graph, "clustering")*10
+
+plot(usps_ego_graph, 
+     layout = layout_with_dh,
+     vertex.label = NA,
+     vertex.color = "lightblue")
 ```
