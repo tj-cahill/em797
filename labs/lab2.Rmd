@@ -102,6 +102,21 @@ ecount(htag_graph)
 edge_density(mention_graph, loops = F)
 ```
 
+## Diameter
+```{r diameter}
+# Calculate diameter
+diameter(htag_graph, directed = F)
+
+# We may want to ignore edge weights when calculating diameter
+mention_graph.unweighted <- mention_graph %>% 
+  delete_edge_attr("weight")
+
+diameter(mention_graph.unweighted, directed = T)
+
+# Determine the path of the longest geodesic (ignoring weight)
+get_diameter(mention_graph.unweighted)
+```
+
 ## Degree Distribution
 ```{r degree-distribution}
 degree_distribution(htag_graph) %>% glimpse()
@@ -152,9 +167,7 @@ shortest_paths(mention_graph,
                mode = "all")$vpath
 ```
 
-## Diameter
-```{r }
-```
+
 
 ## Clustering Coefficient / Transitivity
 ```{r }
