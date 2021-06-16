@@ -89,15 +89,34 @@ mention_centralities %>%
 # Network-Level Measurements
 
 ## Size
+```{r size}
+gsize(htag_graph)
+
+# For comparison
+ecount(htag_graph)
+
+```
 
 ## Density
+```{r }
+```
 
 ## Components
+```{r }
+```
 
 ## Degree Distribution
+```{r }
+```
 
 ## Average Path Length
+```{r }
+```
 
 ## Diameter
+```{r }
+```
 
 ## Clustering Coefficient / Transitivity
+```{r }
+```
