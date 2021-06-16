@@ -98,7 +98,8 @@ ecount(htag_graph)
 ```
 
 ## Density
-```{r }
+```{r density}
+edge_density(mention_graph, loops = F)
 ```
 
 ## Components
