@@ -142,7 +142,14 @@ V(mention_graphs[[3]]) %>% head()
 ```
 
 ## Average Path Length
-```{r }
+```{r path-length}
+mean_distance(mention_graph, directed = T)
+mean_distance(htag_graph, directed = F)
+
+# Can also use related functions to figure out the shortest path between nodes
+shortest_paths(mention_graph, 
+               from = "dailycaller", to = "realdonaldtrump", 
+               mode = "all")$vpath
 ```
 
 ## Diameter
