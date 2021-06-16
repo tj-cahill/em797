@@ -2,7 +2,9 @@
 title: 'Lab 2: Measuring Networks - Centrality and Global Measures'
 author: "Tiernan Cahill"
 date: "15/06/2021"
-output: html_document
+output:
+  github_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
