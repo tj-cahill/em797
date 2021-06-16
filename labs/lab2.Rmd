@@ -102,6 +102,18 @@ ecount(htag_graph)
 edge_density(mention_graph, loops = F)
 ```
 
+## Degree Distribution
+```{r degree-distribution}
+degree_distribution(htag_graph) %>% glimpse()
+
+# Visualize the distribution on a plot
+degree_distribution(htag_graph) %>% plot(xlim = c(1, 40), 
+                                         type = "o", pch = 19, col = "blue",
+                                         xlab = "Degree", 
+                                         ylab = "Density",
+                                         frame = F)
+```
+
 ## Components
 ```{r components}
 components(mention_graph, mode = "weak") -> mention_components
@@ -127,10 +139,6 @@ decompose(mention_graph, mode = "weak") -> mention_graphs
 V(mention_graphs[[1]]) %>% head()
 V(mention_graphs[[2]]) %>% head()
 V(mention_graphs[[3]]) %>% head()
-```
-
-## Degree Distribution
-```{r }
 ```
 
 ## Average Path Length
