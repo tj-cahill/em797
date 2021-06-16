@@ -176,6 +176,10 @@ decompose(mention_graph, mode = "weak") -> mention_graphs
 V(mention_graphs[[1]]) %>% head()
 V(mention_graphs[[2]]) %>% head()
 V(mention_graphs[[3]]) %>% head()
+
+# Visualize a component subgraph
+mention_graphs[[5]] %>% plot(vertex.label = NA,
+                             main = "Component Subgraph #5")
 ```
 
 ## Clustering Coefficient
