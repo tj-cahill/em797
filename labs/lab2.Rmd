@@ -169,6 +169,13 @@ V(mention_graphs[[2]]) %>% head()
 V(mention_graphs[[3]]) %>% head()
 ```
 
-## Clustering Coefficient / Transitivity
-```{r }
+## Clustering Coefficient
+```{r clustering}
+transitivity(htag_graph, type = "global")
+
+# Calculate node-level clustering coefficients
+V(htag_graph)$clustering <- transitivity(htag_graph, type = "local", isolates = "zero")
+
+# Let's take a look!
+vertex_attr(htag_graph, "clustering", "#usps")
 ```
