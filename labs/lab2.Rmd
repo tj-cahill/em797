@@ -1,7 +1,7 @@
 ---
 title: 'Lab 2: Measuring Networks - Centrality and Global Measures'
 author: "Tiernan Cahill"
-date: "12/06/2021"
+date: "15/06/2021"
 output: html_document
 ---
 
@@ -14,12 +14,10 @@ Rather than having to re-convert the raw data from Brandwatch into a graph objec
 
 We will also need to load a few packages for this lab:
 
-  - `magrittr` for handling pipes and enabling tidy workflows
   - `dplyr` for wrangling data
   - `igraph` for modelling and visualizing our network
 
 ```{r load, message = FALSE}
-library(magrittr)
 library(dplyr)
 library(igraph)
 
@@ -87,8 +85,10 @@ mention_centralities %>%
 ```
 
 # Network-Level Measurements
+The `igraph` package also offers a number of different functions for calculating common network-level parameters that can help to specify the shape and structure of a network.
 
 ## Size
+The size of a network is simply defined as the number of edges it contains. This can be calculated using the `gsize` function, but note that the output will always be identical to that of the `ecount` function. 
 ```{r size}
 gsize(htag_graph)
 
@@ -98,11 +98,13 @@ ecount(htag_graph)
 ```
 
 ## Density
+The *density* of a network is considered to be the ratio of the number of (actual) edges to the number of potential edges. This can be calculated using the `edge_density` function. For the purposes of this calculation, we need to decide whether or not to consider *loop edges* that connect a given node to itself. The function defaults to ignore loops if this is not specified and this is typically appropriate for most networks.
 ```{r density}
 edge_density(mention_graph, loops = F)
 ```
 
 ## Degree Distribution
+In addition to calculating the degree centrality at the node level, we may be interested in the distribution of degree centrality throughout the network. For instance, are there a small number of highly-central nodes, or is degree centrality more evenly distributed? The `degree_distribution` function takes the same parameters as `degree` and returns a vector showing the relative frequency of each degree in the network. While this can be useful on its own, for networks with a wide range of degree centralities, it may be more practical to visualize the distribution.
 ```{r degree-distribution}
 degree_distribution(htag_graph) %>% glimpse()
 
@@ -113,8 +115,12 @@ degree_distribution(htag_graph) %>% plot(xlim = c(1, 40),
                                          ylab = "Density",
                                          frame = F)
 ```
+We can see from the visualization above that the vast majority of nodes in this network have a low (< 10) degree centrality, with a long tail of various higher degrees also present.
 
 ## Diameter
+The *diameter* of a network is defined as the length of the longest geodesic (i.e., the shortest path betwen any two nodes). This can be calculated for a graph object using the `diameter` function as shown below. Note that in disconnected networks (i.e., those with more than one component) this will return the diameter of the largest component by default.
+
+In formal graph theory, the weight of edges is incorporated in calculating path length for weighted networks, such that a higher-weighted path between two nodes is treated as "longer" than a lower-weighted path. While this is sometimes appropriate, there are instances in social network analysis where this interpretation of edge weight is counter-intuitive. For example, consider the network of Twitter mentions we have been working with thus far: under the normal procedure for calculating geodesics, a path between two users who frequently tweeted at each other would be considered longer than a path between two users who had interacted only once. In this situation, it may be justifiable to remove the edge weights from the graph object for the purpose of calculating diameter, or the geodesic between two nodes.
 ```{r diameter}
 # Calculate diameter
 diameter(htag_graph, directed = F)
@@ -130,19 +136,21 @@ get_diameter(mention_graph.unweighted)
 ```
 
 ## Average Path Length
+Similar to diameter, we may be interested in determining the average length of the shortest paths between all pairs of nodes. This can be simply calculated using the `mean_distance` function. (*Note:* This function currently does not consider edge weights, and so it is not necessary to remove them from a graph object when calculating average path length).
 ```{r path-length}
-mean_distance(mention_graph, directed = T)
+mean_distance(mention_graph, directed = T) 
 mean_distance(htag_graph, directed = F)
 
 # Can also use related functions to figure out the shortest path between nodes
 shortest_paths(mention_graph, 
                from = "dailycaller", to = "realdonaldtrump", 
-               mode = "all")$vpath
+               mode = "all", weights = NA)$vpath
 ```
 
-
-
 ## Components
+There may be situations in which we want to section a network into *components*. Components are subgraphs of the network which are connected within themselves, but disconnected from each other. In fully-connected networks without isolates, there will be only one component, and many networks have a "big component" structure, where most of the nodes are connected to each other in one large component, with a few smaller disconnected subgraphs adjacent.
+
+Recall that in directed networks, components may be defined as either *strong* or *weak*: A strong component is one in which all of the nodes can be reached by following the directed edges (i.e., *arcs*); a weak component is one in which all of the nodes are connected, but not necessarily following the direction of the edges between them. 
 ```{r components}
 components(mention_graph, mode = "weak") -> mention_components
 components(htag_graph) -> htag_components # Mode ignored for undirected graphs
@@ -159,6 +167,7 @@ max(mention_components$csize)
 # Which component is a given node in?
 mention_components$membership["dailycaller"]
 ```
+There are situations in which we may want to analyze one or more of the component subgraphs of a network as a network in its own right. For instance, we may be interested in determining geodesic paths only between nodes that are actually capable of reaching each other, and which are therefore within the same component (the `diameter` function has actually already done this for us automatically) or we may be interested in isolating a specific component for the purposes of visualization.
 ```{r decomposition}
 # Decompose a single graph object into separate objects for each component
 decompose(mention_graph, mode = "weak") -> mention_graphs
@@ -170,6 +179,7 @@ V(mention_graphs[[3]]) %>% head()
 ```
 
 ## Clustering Coefficient
+The *clustering coefficient* of a node is defined as the probabilty that the adjacent nodes are connected with each other. `igraph` refers to this property as *transitivity* and offers the `transitivity` function with options that allow us to calculate the clustering coefficient either on a per-node basis or for the network as a whole. (*Note:* This function ignores the direction of edges in directed networks.)
 ```{r clustering}
 transitivity(htag_graph, type = "global")
 
