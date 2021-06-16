@@ -103,7 +103,30 @@ edge_density(mention_graph, loops = F)
 ```
 
 ## Components
-```{r }
+```{r components}
+components(mention_graph, mode = "weak") -> mention_components
+components(htag_graph) -> htag_components # Mode ignored for undirected graphs
+
+# Let's take a look
+str(mention_components)
+
+# How many (weakly-connected) components does this network have?
+count_components(mention_graph)
+
+# How big is the largest component?
+max(mention_components$csize)
+
+# Which component is a given node in?
+mention_components$membership["dailycaller"]
+```
+```{r decomposition}
+# Decompose a single graph object into separate objects for each component
+decompose(mention_graph, mode = "weak") -> mention_graphs
+
+# Let's take a look!
+V(mention_graphs[[1]]) %>% head()
+V(mention_graphs[[2]]) %>% head()
+V(mention_graphs[[3]]) %>% head()
 ```
 
 ## Degree Distribution
