@@ -38,7 +38,6 @@ data("UKfaculty", package = "igraphdata")
 
 
 ```{r comm-detect, warning=FALSE}
-
 # Newman and Girvan's (2004) modularity optimization algorithmm based on edge
 # betweenness
 cluster_edge_betweenness(UKfaculty, directed = T) -> comms.betweenness
@@ -55,9 +54,42 @@ cluster_fast_greedy(as.undirected(UKfaculty)) -> comms.fastgreedy
 # Blondel et al.'s (2008) multi-level modularity optimization algorithm (also 
 # only works for undirected networks)
 cluster_louvain(as.undirected(UKfaculty)) -> comms.louvain
-
 ```
 
+```{r comm-detect-output}
+# Let's take a look at the output from one of the community detection algorithms
+print(comms.louvain)
+
+# How many communities are there?
+length(comms.louvain)
+
+# Compare this to the output from a different algorithm
+length(comms.betweenness)
+
+# How big is each community?
+sizes(comms.louvain)
+
+# Which community does each node belong to?
+cbind(node = V(UKfaculty), 
+      community = membership(comms.betweenness)) %>% 
+  head(10)
+
+# Try using the output of a different algorithm
+cbind(node = V(UKfaculty), 
+      community = membership(comms.randomwalk)) %>% 
+  head(10)
+
+# Which nodes are in each community?
+communities(comms.randomwalk)
+
+# What about a specific community
+communities(comms.randomwalk)[[2]]
+```
+## Visualizing Community Detection
+
+```{r comm-detect-viz}
+
+```
 # Measures of Community
 ## Modularity
 ## Assortment
