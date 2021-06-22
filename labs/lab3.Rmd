@@ -16,6 +16,10 @@ We will also need to load a few packages for this lab:
 
   - `dplyr` for wrangling data
   - `igraph` for modelling and visualizing our network
+  - `igraphdata` for sample network data
+  - `assortnet` for calculating assortment
+  
+(*Note*: Community detection algorithms can be quite slow for larger networks, so for the purposes of quickly demonstrating multiple approaches, we will use a smaller network provided in the `igraphdata` package, which models friendships among faculty members at a university (Nepusz et al., 2008).)
 
 ```{r load, message = FALSE}
 library(dplyr)
@@ -25,4 +29,35 @@ library(assortnet)
 mention_graph <- readRDS("../data/mention_graph.RDS")
 htag_graph <- readRDS("../data/htag_graph.RDS")
 htag_uses_graph <- readRDS("../data/htag_uses_graph.RDS")
+
+# Add faculty sample data to R environment
+data("UKfaculty", package = "igraphdata")
 ```
+
+# Community Detection
+
+
+```{r comm-detect, warning=FALSE}
+
+# Newman and Girvan's (2004) modularity optimization algorithmm based on edge
+# betweenness
+cluster_edge_betweenness(UKfaculty, directed = T) -> comms.betweenness
+
+# Pons and Latapy's (2005) modularity optimization algorithm based on random 
+# walk distances
+cluster_walktrap(UKfaculty) -> comms.randomwalk
+
+# Clauset et al.'s (2004) hierarchical agglomerative method designed to improve
+# performance on large, sparesly populated graphs (only works for undirected
+# networks)
+cluster_fast_greedy(as.undirected(UKfaculty)) -> comms.fastgreedy
+
+# Blondel et al.'s (2008) multi-level modularity optimization algorithm (also 
+# only works for undirected networks)
+cluster_louvain(as.undirected(UKfaculty)) -> comms.louvain
+
+```
+
+# Measures of Community
+## Modularity
+## Assortment
