@@ -132,12 +132,29 @@ par(mfrow = c(2, 1))
 # Convert the communities output to dendrgoram and plot
 as.dendrogram(comms.fastgreedy) %>% 
   plot(leaflab = "none", horiz = T,
-       main = "Fast Greedy Method")
+       main = "Fast Greedy Method", xlab = "Depth")
 
 as.dendrogram(comms.randomwalk) %>% 
   plot(leaflab = "none", horiz = T,
-       main = "Random Walks")
+       main = "Random Walks", xlab = "Depth")
 ```
 # Measures of Community
 ## Modularity
+```{r calc-modularity}
+# Calculate the modularity of a given community configuration
+modularity(comms.betweenness)
+
+# Now compare the modularity of different algorithmic approaches to 
+# community configuration
+cbind("modularity" = c(
+        "edge betweenness" = modularity(comms.betweenness),
+        "fast greedy method" = modularity(comms.fastgreedy),
+        "louvain method" = modularity(comms.louvain),
+        "random walks" = modularity(comms.randomwalk)))
+
+# Modularity can also be calculated for arbitrary configurations (such as
+# faculty department)
+modularity(UKfaculty, membership = V(UKfaculty)$Group)
+```
+
 ## Assortment
