@@ -26,16 +26,14 @@ library(dplyr)
 library(igraph)
 library(netseg)
 
-mention_graph <- readRDS("../data/mention_graph.RDS")
-htag_graph <- readRDS("../data/htag_graph.RDS")
-htag_uses_graph <- readRDS("../data/htag_uses_graph.RDS")
-
 # Add faculty sample data to R environment
 data("UKfaculty", package = "igraphdata")
 ```
 
 # Community Detection
+There are a variety of different algorithms available as part of the `igraph` package for detecting the underlying community structure of networks. Most aim to maximise *modularity*, which is defined as the observed proportion of edges occurring within communities compared to what would be expected from a random graph. 
 
+It should be noted that there is no one-size-fits-all approach to community detection. Not all algorithms will identify the optimal configuration, and modularity is known to be an imperfect measure of community structure (e.g., often biased against small communities in networks where large communities are present). All of these approaches also suffer from the limitation that the assigned community memberships are *exhaustive* and *exclusive* &mdash; every node belongs to a community, and to **only** one community.
 
 ```{r comm-detect, warning=FALSE}
 # Newman and Girvan's (2004) modularity optimization algorithmm based on edge
@@ -55,7 +53,7 @@ cluster_fast_greedy(as.undirected(UKfaculty)) -> comms.fastgreedy
 # only works for undirected networks)
 cluster_louvain(as.undirected(UKfaculty)) -> comms.louvain
 ```
-
+All of the community detection algorithms included in `igraph` will output a `communities` object with a similar structure (some elements may depend on the particular algorithm used to generate the object). This object can be used and interpreted in a number of different ways, as shown below.
 ```{r comm-detect-output}
 # Let's take a look at the output from one of the community detection algorithms
 print(comms.louvain)
@@ -86,7 +84,7 @@ communities(comms.randomwalk)
 communities(comms.randomwalk)[[2]]
 ```
 ## Visualizing Community Detection
-
+Once a community structure for a given network has been identified using a community detection algorithm, it can also be incorporated into visualizations of that network. For smaller networks, this can also be a useful way to compare the output of different algorithms to see which have face validity, or align with other attributes of the network.
 ```{r comm-detect-viz, fig.width = 10}
 # Set an RNG seed so that we get consistent layouts
 set.seed(9)
@@ -125,7 +123,7 @@ plot(comms.louvain, UKfaculty,
      vertex.size = 6,
      main = "Louvain Method")
 ```
-
+We can also visualize the aggregation/division strategy used by the algorithm by plotting its output as either a *dendrogram* or a *hierarchical cluster*.
 ```{r comm-detect-viz2, fig.width = 10, fig.height = 12}
 par(mfrow = c(2, 1))
 
