@@ -142,7 +142,14 @@ dendPlot(comms.randomwalk, mode = "hclust", labels = F,
        main = "Random Walks")
 ```
 # Measures of Community
+The modular structure of a network can be quantified and calculated in different ways, measuring the extent to which a network is clustered into discrete groups (i.e., *communities*), as well as the extent to which node-level attributes are related to the structure of these groups.
+
 ## Modularity
+As mentioned above, *modularity* is a measure of the tendency of the nodes in a network to form discrete groups, defined as the proportion of edges occurring within a given community structure compared to a random graph:
+
+$$Q = \frac{1}{2m} \left(A_{ij}-\frac{k_i k_j}{2m}\right)\delta\left(c_i,c_j\right)$$
+
+Since modularity is calculated based on a pre-defined community structure, we can compare how this value varies depending on which community detection algorithm we use (and this can be a valuable metric when comparing the effectiveness of different algorithms). We can also define a community structure based on nominal node-level attributes, which can be especially useful when these attributes reflect real-world organizational units.
 
 ```{r calc-modularity}
 # Calculate the modularity of a given community configuration
@@ -162,11 +169,25 @@ modularity(UKfaculty, membership = V(UKfaculty)$Group)
 ```
 
 ## Assortment
+In contrast to modularity, *assortment* represents the tendency for nodes that have some defined attribute in common to be connected to each other. The assortment (or *assortativity*) coefficient is a modified form of the Pearson correlation intended to measure this tendency within a network:
 
+$$r = \frac{\sum_{ij} \left(A_{ij}-k_ik_j/2m\right)x_ix_j}{\sum_{ij} \left(k_i\delta_{ij}-k_ik_j/2m\right)x_ix_j}$$
 ```{r calc-assortment}
+# Calculate the assortment coefficient based on a nominal node-level attribute
 assortativity_nominal(UKfaculty, V(UKfaculty)$Group, directed = T)
-assortativity_degree(UKfaculty, directed = T)
 
+# Calculate the assortment coefficient based on degree centrality
+assortativity_degree(UKfaculty, directed = T)
+```
+### Alternative Homophily Measures
+Assortment is one measure of *homophily*, or the general tendency of nodes in social networks to form connection with nodes with shared traits (i.e., "birds of a feather flock together"). While this is the primary measure of homophily included in the `igraph` package, additional measures of homophily (including some that provide group- or node-level calculations, such as Coleman's index) are available through the `netseg` package.
+
+The most commonly-used of these is likely the *E/I Index*, which is defined as the ratio of between-group ($E$) to within-group ties($I$):
+
+$$EI = \frac{E-I}{E+I}$$
+
+Note that this means that a negative *E-I* index represents a tendency towards homophily (more within-group ties) and a postive index represents a tendency towards heterophily (more between-group ties).
+```{r calc-homophily}
 # The netseg package provides a number of additional measures of homophily and
 # segregation
 ei(UKfaculty, "Group")                      # Krackhard and Stern's E/I Index
