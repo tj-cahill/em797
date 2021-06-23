@@ -318,7 +318,7 @@ nodes in a network to form discrete groups, defined as the proportion of
 edges occurring within a given community structure compared to a random
 graph:
 
-$$Q = \\frac{1}{2m} \\left(A\_{ij}-\\frac{k\_i k\_j}{2m}\\right)\\delta\\left(c\_i,c\_j\\right)$$
+![equation](https://latex.codecogs.com/png.latex?%5Cbg_white%20%5Cfn_cm%20Q%20%3D%20%5Cfrac%7B1%7D%7B2m%7D%20%5Cleft%28A_%7Bij%7D-%5Cfrac%7Bk_i%20k_j%7D%7B2m%7D%5Cright%29%5Cdelta%5Cleft%28c_i%2Cc_j%5Cright%29)
 
 Since modularity is calculated based on a pre-defined community
 structure, we can compare how this value varies depending on which
@@ -378,7 +378,7 @@ other. The assortment (or *assortativity*) coefficient is a modified
 form of the Pearson correlation intended to measure this tendency within
 a network:
 
-$$r = \\frac{\\sum\_{ij} \\left(A\_{ij}-k\_ik\_j/2m\\right)x\_ix\_j}{\\sum\_{ij} \\left(k\_i\\delta\_{ij}-k\_ik\_j/2m\\right)x\_ix\_j}$$
+![equation](https://latex.codecogs.com/png.latex?%5Cbg_white%20%5Cfn_cm%20r%20%3D%20%5Cfrac%7B%5Csum_%7Bij%7D%20%5Cleft%28A_%7Bij%7D-k_ik_j/2m%5Cright%29x_ix_j%7D%7B%5Csum_%7Bij%7D%20%5Cleft%28k_i%5Cdelta_%7Bij%7D-k_ik_j/2m%5Cright%29x_ix_j%7D)
 
 ``` r
 # Calculate the assortment coefficient based on a nominal node-level attribute
@@ -435,7 +435,7 @@ the `netseg` package.
 The most commonly-used of these is likely the *E/I Index*, which is
 defined as the ratio of between-group (*E*) to within-group ties(*I*):
 
-$$EI = \\frac{E-I}{E+I}$$
+![equation](https://latex.codecogs.com/png.latex?%5Cbg_white%20%5Cfn_cm%20EI%20%3D%20%5Cfrac%7BE-I%7D%7BE&plus;I%7D)
 
 Note that this means that a negative *E-I* index represents a tendency
 towards homophily (more within-group ties) and a postive index
