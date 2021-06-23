@@ -87,8 +87,56 @@ communities(comms.randomwalk)[[2]]
 ```
 ## Visualizing Community Detection
 
-```{r comm-detect-viz}
+```{r comm-detect-viz, fig.width = 10}
+# Set an RNG seed so that we get consistent layouts
+set.seed(9)
+l = layout_with_fr(UKfaculty)
 
+# Plot the whole network, colour-coded by the faculty members' departments
+plot(UKfaculty,
+     layout = l,
+     edge.arrow.mode = 0,
+     vertex.label = NA,
+     vertex.size = 6,
+     vertex.color = V(UKfaculty)$Group,
+     main = "Faculty at a UK University Grouped by Department")
+
+# Add the results of some community detection algorithms to the visualization
+par(mfrow=c(1, 3))
+
+plot(comms.betweenness, UKfaculty,
+     layout = l,
+     edge.arrow.mode = 0,
+     vertex.label = NA,
+     vertex.size = 6,
+     main = "Edge Betweenness")
+
+plot(comms.randomwalk, UKfaculty,
+     layout = l,
+     edge.arrow.mode = 0,
+     vertex.label = NA,
+     vertex.size = 6,
+     main = "Random Walks")
+
+plot(comms.louvain, UKfaculty,
+     layout = l,
+     edge.arrow.mode = 0,
+     vertex.label = NA,
+     vertex.size = 6,
+     main = "Louvain Method")
+```
+
+```{r comm-detect-viz2, fig.width = 10, fig.height = 12}
+par(mfrow = c(2, 1))
+
+# Convert the communities output to dendrgoram and plot
+as.dendrogram(comms.fastgreedy) %>% 
+  plot(leaflab = "none", horiz = T,
+       main = "Fast Greedy Method")
+
+as.dendrogram(comms.randomwalk) %>% 
+  plot(leaflab = "none", horiz = T,
+       main = "Random Walks")
 ```
 # Measures of Community
 ## Modularity
