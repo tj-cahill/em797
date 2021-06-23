@@ -17,14 +17,14 @@ We will also need to load a few packages for this lab:
   - `dplyr` for wrangling data
   - `igraph` for modelling and visualizing our network
   - `igraphdata` for sample network data
-  - `assortnet` for calculating assortment
+  - `netseg` for alternative homophily and segregation measures
   
 (*Note*: Community detection algorithms can be quite slow for larger networks, so for the purposes of quickly demonstrating multiple approaches, we will use a smaller network provided in the `igraphdata` package, which models friendships among faculty members at a university (Nepusz et al., 2008).)
 
 ```{r load, message = FALSE}
 library(dplyr)
 library(igraph)
-library(assortnet)
+library(netseg)
 
 mention_graph <- readRDS("../data/mention_graph.RDS")
 htag_graph <- readRDS("../data/htag_graph.RDS")
@@ -168,4 +168,10 @@ modularity(UKfaculty, membership = V(UKfaculty)$Group)
 ```{r calc-assortment}
 assortativity_nominal(UKfaculty, V(UKfaculty)$Group, directed = T)
 assortativity_degree(UKfaculty, directed = T)
+
+# The netseg package provides a number of additional measures of homophily and
+# segregation
+ei(UKfaculty, "Group")                      # Krackhard and Stern's E/I Index
+freeman(as.undirected(UKfaculty), "Group")  # Freeman's segregation index
+coleman(UKfaculty, "Group")                 # Coleman's homophily index
 ```
