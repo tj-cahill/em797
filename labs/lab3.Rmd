@@ -140,6 +140,7 @@ as.dendrogram(comms.randomwalk) %>%
 ```
 # Measures of Community
 ## Modularity
+
 ```{r calc-modularity}
 # Calculate the modularity of a given community configuration
 modularity(comms.betweenness)
@@ -158,3 +159,8 @@ modularity(UKfaculty, membership = V(UKfaculty)$Group)
 ```
 
 ## Assortment
+
+```{r calc-assortment}
+assortativity_nominal(UKfaculty, V(UKfaculty)$Group, directed = T)
+assortativity_degree(UKfaculty, directed = T)
+```
