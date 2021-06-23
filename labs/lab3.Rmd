@@ -26,8 +26,11 @@ library(dplyr)
 library(igraph)
 library(netseg)
 
-# Add faculty sample data to R environment
+# Add faculty sample data to R environment (must have igraphdata installed)
 data("UKfaculty", package = "igraphdata")
+
+htag_graph <- readRDS("../data/htag_graph.RDS")
+mention_graph <- readRDS("../data/mention_graph.RDS")
 ```
 
 # Community Detection
@@ -141,6 +144,7 @@ dendPlot(comms.fastgreedy, mode = "hclust", labels = F,
 dendPlot(comms.randomwalk, mode = "hclust", labels = F,
        main = "Random Walks")
 ```
+
 # Measures of Community
 The modular structure of a network can be quantified and calculated in different ways, measuring the extent to which a network is clustered into discrete groups (i.e., *communities*), as well as the extent to which node-level attributes are related to the structure of these groups.
 
@@ -168,6 +172,21 @@ cbind("modularity" = c(
 modularity(UKfaculty, membership = V(UKfaculty)$Group)
 ```
 
+```{r calc-modularity-twitter}
+# Let's try calculating modularity based on social media data!
+mention_comms <- mention_graph %>% 
+  as.undirected() %>%
+  cluster_fast_greedy()
+
+htag_comms <- htag_graph %>%
+  as.undirected() %>%
+  cluster_fast_greedy()
+
+cbind("modularity" = c(
+  "user mentions" = modularity(mention_comms),
+  "hashtag coincidence" = modularity(htag_comms)))
+```
+
 ## Assortment
 In contrast to modularity, *assortment* represents the tendency for nodes that have some defined attribute in common to be connected to each other. The assortment (or *assortativity*) coefficient is a modified form of the Pearson correlation intended to measure this tendency within a network:
 
@@ -178,6 +197,24 @@ assortativity_nominal(UKfaculty, V(UKfaculty)$Group, directed = T)
 
 # Calculate the assortment coefficient based on degree centrality
 assortativity_degree(UKfaculty, directed = T)
+```
+
+```{r calc-assortment-twitter}
+# By degree
+assortativity_degree(mention_graph, directed = T)
+
+# The assortativity function doesn't like missing data, so we will have to replace
+# this with a flag (noting that this *will* affect the results)
+mention_graph.nomissing <- mention_graph
+V(mention_graph.nomissing)$region[is.na(V(mention_graph.nomissing)$region)] <- 99L
+V(mention_graph.nomissing)$followers[is.na(V(mention_graph.nomissing)$followers)] <- 0
+V(mention_graph.nomissing)$verified[is.na(V(mention_graph.nomissing)$verified)] <- F
+
+# By region
+assortativity_nominal(mention_graph.nomissing, as.factor(V(mention_graph.nomissing)$region), directed = T)
+
+# By followers
+assortativity(mention_graph.nomissing, V(mention_graph.nomissing)$followers, directed = T)
 ```
 ### Alternative Homophily Measures
 Assortment is one measure of *homophily*, or the general tendency of nodes in social networks to form connection with nodes with shared traits (i.e., "birds of a feather flock together"). While this is the primary measure of homophily included in the `igraph` package, additional measures of homophily (including some that provide group- or node-level calculations, such as Coleman's index) are available through the `netseg` package.
@@ -193,4 +230,15 @@ Note that this means that a negative *E-I* index represents a tendency towards h
 ei(UKfaculty, "Group")                      # Krackhard and Stern's E/I Index
 freeman(as.undirected(UKfaculty), "Group")  # Freeman's segregation index
 coleman(UKfaculty, "Group")                 # Coleman's homophily index
+```
+
+```{r calc-homophily-twitter}
+# Let's try this on some real-world social media data!
+ei(mention_graph, "verified")
+freeman(as.undirected(mention_graph), "region")
+coleman(mention_graph, "verified")
+
+# Note that the functions from the netseg package can handle missing data, even
+# for calculating the assortment coefficient
+assort(mention_graph, "region")
 ```
