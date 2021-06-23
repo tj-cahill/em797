@@ -64,6 +64,16 @@ cluster_walktrap(UKfaculty) -> comms.randomwalk
 # networks)
 cluster_fast_greedy(as.undirected(UKfaculty)) -> comms.fastgreedy
 
+# Let's try using the fast greedy method to detect communities in some 
+# real-world social media networks
+mention_comms <- mention_graph %>% 
+  as.undirected() %>%
+  cluster_fast_greedy()
+
+htag_comms <- htag_graph %>%
+  as.undirected() %>%
+  cluster_fast_greedy()
+
 # Blondel et al.'s (2008) multi-level modularity optimization algorithm (also 
 # only works for undirected networks)
 cluster_louvain(as.undirected(UKfaculty)) -> comms.louvain
@@ -265,6 +275,34 @@ dendPlot(comms.randomwalk, mode = "hclust", labels = F,
 
 ![](lab3_files/figure-gfm/comm-detect-viz2-2.png)<!-- -->
 
+## Community Subgraphs
+
+Once a community structure is established, this can be used to decompose
+a network into subgraphs. This can be particularly useful when
+attempting to break down a network with a *giant component* structure.
+
+``` r
+# Extract Community #1 from the hashtag coincidence network
+induced_subgraph(htag_graph, communities(htag_comms)[[12]]) -> htag_comm.12
+
+# How big is this community?
+vcount(htag_comm.12)
+```
+
+    ## [1] 11
+
+``` r
+# Visualize the community
+htag_comm.12 %>% 
+  plot(vertex.shape = "none", 
+       layout = layout_with_kk,
+       vertex.label.color = "gray10",
+       vertex.label.font = 2,
+       edge.color = "gray85")
+```
+
+![](lab3_files/figure-gfm/comm-subgraphs-1.png)<!-- -->
+
 # Measures of Community
 
 The modular structure of a network can be quantified and calculated in
@@ -323,14 +361,6 @@ modularity(UKfaculty, membership = V(UKfaculty)$Group)
 
 ``` r
 # Let's try calculating modularity based on social media data!
-mention_comms <- mention_graph %>% 
-  as.undirected() %>%
-  cluster_fast_greedy()
-
-htag_comms <- htag_graph %>%
-  as.undirected() %>%
-  cluster_fast_greedy()
-
 cbind("modularity" = c(
   "user mentions" = modularity(mention_comms),
   "hashtag coincidence" = modularity(htag_comms)))
