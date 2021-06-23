@@ -2,7 +2,9 @@
 title: 'Lab 3: Measuring Networks - Community Structure and Assortment'
 author: "Tiernan Cahill"
 date: "21/06/2021"
-output: html_document
+output:
+  github_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
