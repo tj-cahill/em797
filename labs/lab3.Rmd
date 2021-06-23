@@ -129,14 +129,19 @@ plot(comms.louvain, UKfaculty,
 ```{r comm-detect-viz2, fig.width = 10, fig.height = 12}
 par(mfrow = c(2, 1))
 
-# Convert the communities output to dendrgoram and plot
-as.dendrogram(comms.fastgreedy) %>% 
-  plot(leaflab = "none", horiz = T,
-       main = "Fast Greedy Method", xlab = "Depth")
+# Plot as dendrograms
+dendPlot(comms.fastgreedy, mode = "dendrogram", leaflab = "none", horiz = T,
+       main = "Fast Greedy Method")
 
-as.dendrogram(comms.randomwalk) %>% 
-  plot(leaflab = "none", horiz = T,
-       main = "Random Walks", xlab = "Depth")
+dendPlot(comms.randomwalk, mode = "dendrogram", leaflab = "none", horiz = T,
+       main = "Random Walks")
+
+# Plot as hierarchical clusters
+dendPlot(comms.fastgreedy, mode = "hclust", labels = F,
+       main = "Fast Greedy Method")
+
+dendPlot(comms.randomwalk, mode = "hclust", labels = F,
+       main = "Random Walks")
 ```
 # Measures of Community
 ## Modularity
