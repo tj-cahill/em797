@@ -15,15 +15,67 @@ We will again be importing the graph objects to be used in this analysis from th
 
 We will also need to load a few packages for this lab:
 
+  - `readxl` for importing Excel data
   - `dplyr` for wrangling data
+  -  `Matrix` for handling sparse matrices
   - `igraph` for modelling and visualizing our network
   - `statnet` for additional inferential analysis tools
 
 ```{r load, message = FALSE}
+library(readxl)
 library(dplyr)
+library(Matrix)
 library(igraph)
 library(statnet)
 ```
 
-```{r data-processing}
+```{r data-import}
+# Import existing graph objects
+mention_graph <- readRDS("../data/mention_graph.RDS")
+htag_graph <- readRDS("../data/htag_graph.RDS")
+
+# Import original dataset
+lab <- read_excel("../data/lab.xlsx") %>% 
+  rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
+```
+
+```{r graph-gen-htag}
+# graph_gen_htag() - Generate a sociomatrix based on shared hashtag usage
+
+graph_gen_htag <- function (df) {
+  # Combine hashtag lists from multiple tweets by the same user
+  htag_uses <- df %>%
+    select(user = Author, htags = Hashtags) %>%
+    group_by(user) %>% mutate(htags = paste(htags, collapse = ", "),
+                              htags = str_split(htags, ", ")) %>%
+    rowwise() %>% mutate(htags = list(unique(htags)),
+                         htags = list(sort(htags))) %>%
+    distinct()
+  
+  # Convert the nested list to a matrix
+  htag_uses_matrix <- htag_uses %>%
+    unnest(htags) %>%
+    table() %>% unclass() %>% Matrix()
+  
+  # Multiply the affiliation matrix by its transpose to convert to a sociomatrix
+  shared_htag_matrix <- htag_uses_matrix %*% t(htag_uses_matrix)
+  
+  return(shared_htag_matrix)
+}
+```
+
+```{r graph-gen}
+
+
+# Generate a sociomatrix based on shared region
+
+# Generate a sociomatrix based on shared gender
+
+# Generate a sociomatrix based on shared verified status
+
+# Generate a sociomatrix based on shared interest
+
+# Generate a sociomatrix based on shared account type
+
+
 ```
