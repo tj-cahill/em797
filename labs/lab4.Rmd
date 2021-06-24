@@ -10,3 +10,20 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Loading Data and Required Packages
+We will again be importing the graph objects to be used in this analysis from the serialized RDS format.
+
+We will also need to load a few packages for this lab:
+
+  - `dplyr` for wrangling data
+  - `igraph` for modelling and visualizing our network
+  - `statnet` for additional inferential analysis tools
+
+```{r load, message = FALSE}
+library(dplyr)
+library(igraph)
+library(statnet)
+```
+
+```{r data-processing}
+```
