@@ -16,6 +16,7 @@ We will again be importing the graph objects to be used in this analysis from th
 We will also need to load a few packages for this lab:
 
   - `readxl` for importing Excel data
+  - `stringr` for parsing data in strings
   - `dplyr` for wrangling data
   -  `Matrix` for handling sparse matrices
   - `igraph` for modelling and visualizing our network
@@ -23,13 +24,14 @@ We will also need to load a few packages for this lab:
 
 ```{r load, message = FALSE}
 library(readxl)
+library(stringr)
 library(dplyr)
 library(Matrix)
 library(igraph)
 library(statnet)
 ```
 
-```{r data-import}
+```{r data-import, message=FALSE}
 # Import existing graph objects
 mention_graph <- readRDS("../data/mention_graph.RDS")
 htag_graph <- readRDS("../data/htag_graph.RDS")
@@ -40,9 +42,9 @@ lab <- read_excel("../data/lab.xlsx") %>%
 ```
 
 ```{r graph-gen}
+
 # graph_gen(df, col) - Generate a sociomatrix based on a generic shared 
 # attribute
-
 graph_gen <- function (df, col) {
   
   # Create an affiliation matrix connecting users based on a shared attribute
@@ -57,7 +59,6 @@ graph_gen <- function (df, col) {
   
   return(shared_attr_matrix)
 }
-
 
 # graph_gen_region(df) - Generate a sociomatrix based on shared region - alias
 # for graph_gen()
@@ -85,56 +86,41 @@ graph_gen_verified <- function (df) {
 }
 ```
 
-```{r graph-gen-parsed}
-# graph_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage 
-graph_gen_htag <- function (df) {
+```{r graph-gen-multi}
+
+# graph_gen_multi(df, col, sep) - Generate a sociomatrix based on a generic
+# shared attribute that may contain multiple values
+graph_gen_multi <- function (df, col, sep = ", ") {
   
-  # Combine hashtag lists from multiple tweets by the same user
-  htag_uses <- df %>%
-    select(user = Author, htags = Hashtags) %>%
-    group_by(user) %>% mutate(htags = paste(htags, collapse = ", "),
-                              htags = str_split(htags, ", ")) %>%
-    rowwise() %>% mutate(htags = list(unique(htags)),
-                         htags = list(sort(htags))) %>%
+  # Combine listed attributes from multiple tweets by the same user
+  attr_list <- df %>%
+    select(user = Author, attrs = !! sym(col)) %>%
+    group_by(user) %>% mutate(attrs = paste(attrs, collapse = sep),
+                              attrs = str_split(attrs, sep)) %>%
+    rowwise() %>% mutate(attrs = list(unique(attrs)),
+                         attrs = list(sort(attrs))) %>%
     distinct()
   
-  # Convert the nested list to a matrix
-  htag_uses_matrix <- htag_uses %>%
-    unnest(htags) %>%
+  # Convert the nested list to an affiliation matrix
+  attr_matrix <- attr_list %>%
+    unnest(attrs) %>%
     table() %>%
-    unclass() %>% 
+    unclass() %>%
     Matrix()
   
-  # Multiply the affiliation matrix by its transpose to convert to a sociomatrix
-  shared_htag_matrix <- htag_uses_matrix %*% t(htag_uses_matrix)
+  # Multiply the affiliation matrix by its transpose to create a sociomatrix
+  shared_attr_matrix <- attr_matrix %*% t(attr_matrix)
+  return(shared_attr_matrix)
+}
   
-  return(shared_htag_matrix)
+# graph_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage -
+# alias for graph_gen_multi()
+graph_gen_htag <- function (df) {
+  return(graph_gen_multi(df, col = "Hashtags"))
 }
 
-# Generate a sociomatrix based on shared interests
+# Generate a sociomatrix based on shared interests - alias for graph_gen_multi()
 graph_gen_interests <- function (df) {
-  
-  # Combine hashtag lists from multiple tweets by the same user
-  user_interests <- df %>%
-    select(user = Author, interests = Interest) %>%
-    group_by(user) %>% mutate(interests = paste(interests, collapse = ", "),
-                              interests = str_split(interests, ", ")) %>%
-    rowwise() %>% mutate(interests = list(unique(interests)),
-                         interests = list(sort(interests))) %>%
-    distinct()
-  
-  # Convert the nested list to a matrix
-  user_interests_matrix <- user_interests %>%
-    unnest(interests) %>%
-    table() %>% 
-    unclass() %>% 
-    Matrix()
-  
-  # Multiply the affiliation matrix by its transpose to convert to a sociomatrix
-  shared_interests_matrix <- user_interests_matrix %*% t(user_interests_matrix)
-  
-  return(shared_interests_matrix)
+  return(graph_gen_multi(df, col = "Interest"))
 }
-
-
 ```
