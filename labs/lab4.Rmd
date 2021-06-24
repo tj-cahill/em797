@@ -39,7 +39,53 @@ lab <- read_excel("../data/lab.xlsx") %>%
   rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
 ```
 
-```{r graph-gen-htag}
+```{r graph-gen}
+# graph_gen(df, col) - Generate a sociomatrix based on a generic shared 
+# attribute
+
+graph_gen <- function (df, col) {
+  
+  # Create an affiliation matrix connecting users based on a shared attribute
+  user_attr_matrix <- df %>%
+    select(user = Author, attr = !! sym(col)) %>%
+    table() %>%
+    unclass() %>%
+    Matrix()
+  
+  # Multiply the affiliation matrix by its transpose to create a sociomatrix
+  shared_attr_matrix <- user_attr_matrix %*% t(user_attr_matrix)
+  
+  return(shared_attr_matrix)
+}
+
+
+# graph_gen_region(df) - Generate a sociomatrix based on shared region - alias
+# for graph_gen()
+graph_gen_region <- function (df) {
+  return(graph_gen(df, col = "Region"))
+}
+
+# graph_gen_acctype(df) - Generate a sociomatrix based on shared account type -
+# alias for graph_gen()
+graph_gen_acctype <- function (df) { 
+  return(graph_gen(df, col = "AccountType"))
+}
+
+# graph_gen_gender(df) - Generate a sociomatrix based on shared gender - alias
+# for graph_gen()
+graph_gen_gender <- function (df) {
+  return(graph_gen(df, col = "Gender"))
+}
+
+
+# graph_gen_verified(df) - Generate a sociomatrix based on shared verified
+# status - alias for graph_gen()
+graph_gen_verified <- function (df) {
+  return(graph_gen(df, col = "TwitterVerified"))
+}
+```
+
+```{r graph-gen-parsed}
 # graph_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage 
 graph_gen_htag <- function (df) {
   
@@ -55,58 +101,40 @@ graph_gen_htag <- function (df) {
   # Convert the nested list to a matrix
   htag_uses_matrix <- htag_uses %>%
     unnest(htags) %>%
-    table() %>% unclass() %>% Matrix()
+    table() %>%
+    unclass() %>% 
+    Matrix()
   
   # Multiply the affiliation matrix by its transpose to convert to a sociomatrix
   shared_htag_matrix <- htag_uses_matrix %*% t(htag_uses_matrix)
   
   return(shared_htag_matrix)
 }
-```
 
-```{r graph-gen-region}
-# graph_gen_region(df) - Generate a sociomatrix based on shared region
-graph_gen_region <- function (df) {
+# Generate a sociomatrix based on shared interests
+graph_gen_interests <- function (df) {
   
-  # Create an affiliation matrix connecting users to regions
-  user_region_matrix <- df %>%
-    select(user = Author, region = Region) %>% 
+  # Combine hashtag lists from multiple tweets by the same user
+  user_interests <- df %>%
+    select(user = Author, interests = Interest) %>%
+    group_by(user) %>% mutate(interests = paste(interests, collapse = ", "),
+                              interests = str_split(interests, ", ")) %>%
+    rowwise() %>% mutate(interests = list(unique(interests)),
+                         interests = list(sort(interests))) %>%
+    distinct()
+  
+  # Convert the nested list to a matrix
+  user_interests_matrix <- user_interests %>%
+    unnest(interests) %>%
     table() %>% 
     unclass() %>% 
     Matrix()
   
-  shared_region_matrix <- user_region_matrix %*% t(user_region_matrix)
+  # Multiply the affiliation matrix by its transpose to convert to a sociomatrix
+  shared_interests_matrix <- user_interests_matrix %*% t(user_interests_matrix)
   
-  return(shared_region_matrix)
+  return(shared_interests_matrix)
 }
-
-```
-
-```{r graph_gen_acctype}
-# graph_gen_acctype(df) - Generate a sociomatrix based on shared account type
-graph_gen_acctype <- function (df) {
-  
-  # Create an affiliation matrix connecting users to regions
-  user_acctype_matrix <- df %>%
-    select(user = Author, acctype = AccountType) %>% 
-    table() %>% 
-    unclass() %>% 
-    Matrix()
-  
-  shared_acctype_matrix <- user_acctype_matrix %*% t(user_acctype_matrix)
-  
-  return(shared_acctype_matrix)
-}
-```
-
-```{r graph-gen}
-# Generate a sociomatrix based on shared gender
-
-# Generate a sociomatrix based on shared verified status
-
-# Generate a sociomatrix based on shared interest
-
-# Generate a sociomatrix based on shared account type
 
 
 ```
