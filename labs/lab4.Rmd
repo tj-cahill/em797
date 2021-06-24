@@ -40,8 +40,7 @@ lab <- read_excel("../data/lab.xlsx") %>%
 ```
 
 ```{r graph-gen-htag}
-# graph_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage
-
+# graph_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage 
 graph_gen_htag <- function (df) {
   
   # Combine hashtag lists from multiple tweets by the same user
@@ -70,7 +69,7 @@ graph_gen_htag <- function (df) {
 graph_gen_region <- function (df) {
   
   # Create an affiliation matrix connecting users to regions
-  user_region_matrix <- lab %>%
+  user_region_matrix <- df %>%
     select(user = Author, region = Region) %>% 
     table() %>% 
     unclass() %>% 
@@ -83,8 +82,24 @@ graph_gen_region <- function (df) {
 
 ```
 
-```{r graph-gen}
+```{r graph_gen_acctype}
+# graph_gen_acctype(df) - Generate a sociomatrix based on shared account type
+graph_gen_acctype <- function (df) {
+  
+  # Create an affiliation matrix connecting users to regions
+  user_acctype_matrix <- df %>%
+    select(user = Author, acctype = AccountType) %>% 
+    table() %>% 
+    unclass() %>% 
+    Matrix()
+  
+  shared_acctype_matrix <- user_acctype_matrix %*% t(user_acctype_matrix)
+  
+  return(shared_acctype_matrix)
+}
+```
 
+```{r graph-gen}
 # Generate a sociomatrix based on shared gender
 
 # Generate a sociomatrix based on shared verified status
