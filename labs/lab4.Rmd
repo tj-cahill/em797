@@ -1,0 +1,12 @@
+---
+title: 'Intro to Network Regression'
+author: "Tiernan Cahill"
+date: "23/06/2021"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
