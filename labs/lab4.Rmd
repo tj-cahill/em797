@@ -33,10 +33,10 @@ source("lab4_functions.R")
 
 ```{r data-import, message=FALSE}
 # Import existing graph objects
-mention_graph <- readRDS("../data/mention_graph.RDS")
+mention_graph <- readRDS("../data/covid_tweets_mention_graph.RDS")
 
 # Import original dataset
-lab <- read_excel("../data/lab.xlsx") %>% 
+lab <- read_excel("../data/covid_tweets.xlsx") %>% 
   rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
 ```
 
@@ -79,7 +79,7 @@ htag.cor <- qaptest(list(mention.mat, htag.mat),
 print(htag.cor)
 
 # Plot results of QAP test
-plot(htag.cor, xlim=c(-0.01, 0.005))
+plot(htag.cor, xlim=c(-0.1, 0.1))
 ```
 
 ```{r mrqap-linear}
@@ -99,7 +99,7 @@ mention.mat_bin <- as_adjacency_matrix(mention_graph, attr = NULL, sparse = F)
 # Construct a linear multiple regression model using QAP
 model.log <- netlogit(mention.mat_bin,
                   list(htag.mat, interest.mat),
-                  reps = 1)
+                  reps = 10)
 
 # View the model summary
 summary(model.log)
