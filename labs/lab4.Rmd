@@ -22,9 +22,9 @@ We will also need to load a few packages for this lab:
 
 ```{r load, message = FALSE}
 library(readxl)
-library(magrittr)
+# library(magrittr)
 library(igraph)
-library(intergraph)
+# library(intergraph)
 library(statnet)
 
 # Import helper functions
@@ -51,17 +51,19 @@ interest.mat <- matrix_gen_interests(lab)
 # region.mat <- matrix_gen_region(lab)
 # verified.mat <- matrix_gen_verified(lab)
 
-# Let's take a look at one of the generated matrices
+# Let's take a look at two of the generated matrices
+htag.mat[1:10, 1:10]
 interest.mat[1:10, 1:10]
+
+# In order to run a QAP tests, we need all the networks to be in a 
+# regular (NOT sparse) adjacency matrix format
+
+mention.mat <- as_adjacency_matrix(mention_graph, attr = "weight", sparse = F)
+htag.mat <- as.matrix(htag.mat)
+interest.mat <- as.matrix(interest.mat)
 ```
 
 ```{r qap-cor}
-# In order to run a correlation analysis, we need both networks to be in a 
-# regular (NOT sparse) adjacency matrix format
-
-mention.mat <- as_adjacency_matrix(mention_graph, sparse = F)
-htag.mat <- as.matrix(htag.mat)
-
 # Calculate the correlation coefficient between the mention network and shared
 # hashtag usage
 gcor(mention.mat, htag.mat)
@@ -80,4 +82,25 @@ print(htag.cor)
 plot(htag.cor, xlim=c(-0.01, 0.005))
 ```
 
-```{}
+```{r mrqap-linear}
+# Construct a linear multiple regression model using QAP
+model.lm <- netlm(mention.mat,
+                  list(htag.mat, interest.mat),
+                  reps = 10)
+
+# View the model summary
+summary(model.lm)
+```
+
+```{r mrqap-logit}
+# Get an unweighted (binary) matrix representation of the network
+mention.mat_bin <- as_adjacency_matrix(mention_graph, attr = NULL, sparse = F)
+
+# Construct a linear multiple regression model using QAP
+model.log <- netlogit(mention.mat_bin,
+                  list(htag.mat, interest.mat),
+                  reps = 1)
+
+# View the model summary
+summary(model.log)
+```
