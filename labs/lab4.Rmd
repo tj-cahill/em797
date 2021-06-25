@@ -16,20 +16,24 @@ We will again be importing the graph objects to be used in this analysis from th
 We will also need to load a few packages for this lab:
 
   - `readxl` for importing Excel data
-  - `magrittr` for pipes
   - `igraph` for modelling and visualizing our network
   - `statnet` for additional inferential analysis tools
+  
+## Helper Functions
+We will also be importing a file containing *helper functions*: Since the procedures demonstrated in this lab are primarily intended to infer relationships between different networks, we will need graphs to serve as both the dependent and independent variables in these relationships. For this analysis, we will treat the network of Twitter mentions used in previous labs as the DV and use the helper functions to generate additional networks from the same dataset, which can function as IVs. The file contains functions for generating sociomatrices based on shared attributes in Brandwatch data, as well as aliases to simplify applying these functions to some likely attributes (e.g., hashtag usage, interests, gender, region). 
+
+The functions are provided in a separate file (`lab4_functions.R`) so that they can be easily reused in other analyses, but you may wish to look over the code yourself for future reference in how to construct different graphs from the same dataset.  
 
 ```{r load, message = FALSE}
 library(readxl)
-# library(magrittr)
 library(igraph)
-# library(intergraph)
 library(statnet)
 
 # Import helper functions
 source("lab4_functions.R")
 ```
+## Dataset
+The methods demonstrated in this lab can be very computationally demanding and time-consuming, especially for large networks. This is partly due to the design of the algorithms provided as part of the `statnet` package, which are based on networks in an *adjacency matrix* format, but is also due to the fact that the Quadratic Assignment Procedure (QAP) on which these approaches are based requires a significant number of replications. For this reason, we will be importing a significantly smaller dataset, based on the keyword matching demonstrated in Lab 1 (tweets containing terms related to the COVID-19 pandemic).
 
 ```{r data-import, message=FALSE}
 # Import existing graph objects
@@ -39,6 +43,9 @@ mention_graph <- readRDS("../data/covid_tweets_mention_graph.RDS")
 lab <- read_excel("../data/covid_tweets.xlsx") %>% 
   rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
 ```
+
+## Data Transformations
+Using the provided helper functions, we will generate a selection of sociomatrices representing shared attributes between nodes (*account type*, *gender*, *hashtag usage*, *interests*, *region*, and *verified status*). Note that in order to use the QAP algorithms provided in the `statnet` package, all of the networks for both the DV and any IVs need to be in a **non-sparse** adjacency matrix format. The helper functions provide sparse matrices by default in order to conserve memory, and so we will need to convert the ones we intend on using in the subsequent analysis (using the `as.matrix` function).
 
 ```{r graph-gen}
 # Use the helper functions to generate additional graphs based on shared
@@ -62,18 +69,22 @@ mention.mat <- as_adjacency_matrix(mention_graph, attr = "weight", sparse = F)
 htag.mat <- as.matrix(htag.mat)
 interest.mat <- as.matrix(interest.mat)
 ```
+# Inferential Statistics with Networks
+*QAP* allows researchers to conduct inferential analysis of network data by providing robust standard errors based on *resampling*. In many ways, this is similar to a bootstrap regression procedure. 
 
+## Correlation
+The `gcor` function from the `statnet` package allows us to calculate a *product-moment correlation coefficient*, equivalent to Pearson's correlation coefficient, between two graphs. However, the normal procedures for calculating a *p*-value from Pearson's correlation do not apply neatly to network data. For this reason, we use a QAP test to support null hypothesis statistical significance testing by comparing the observed correlations against simulated graphs representing the null hypothesis.
 ```{r qap-cor}
 # Calculate the correlation coefficient between the mention network and shared
-# hashtag usage
-gcor(mention.mat, htag.mat)
+# hashtag usage - mode specifies whether or not graphs are directed
+gcor(mention.mat, htag.mat, mode = "digraph")
 
 # Run a QAP test to determine if this level of correlation is significant
 htag.cor <- qaptest(list(mention.mat, htag.mat),
                     gcor,
                     g1 = 1,
                     g2 = 2,
-                    reps = 100)
+                    reps = 10)
 
 # View results of QAP test
 print(htag.cor)
@@ -81,25 +92,33 @@ print(htag.cor)
 # Plot results of QAP test
 plot(htag.cor, xlim=c(-0.1, 0.1))
 ```
+## Linear Regression
+For situations involving more than one IV, we may wish to construct a *multiple regression model* for our network of interest (DV). Calculation of standard errors for these models is also possible using QAP and supported by the `netlm` function from `statnet`, which functions similarly to the `lm` function from base R's `stats` package, albeit with a slightly different syntax, as shown below.
 
-```{r mrqap-linear}
+(*Note*: Running QAP for network regression models can take a significant amount of time, especially on slower computers. For this reason, you may wish to set a low number of repetitions for the `netlm` function while testing your code, and then increase this number once you are ready to analyze your data. If you do not specify a number of repetions, the function will default to 1000.)
+```{r mrqap-linear, warning=FALSE}
 # Construct a linear multiple regression model using QAP
 model.lm <- netlm(mention.mat,
                   list(htag.mat, interest.mat),
-                  reps = 10)
+                  mode = "digraph",
+                  reps = 1)
 
 # View the model summary
 summary(model.lm)
 ```
+## Logistic Regression
+Just as with standard regression, a linear model is only appropriate if the data used as the DV is *continuous* (i.e., interval- or ratio-level). For networks in an adjacency matrix format, this typically means that *weighted* networks should be fitted with a linear model, wheras *unweighted* networks should be treated as nominal-level data, and fit to a *logistic regression model*. Fortunately, this is supported by the `netlogit` function. 
 
-```{r mrqap-logit}
+For the purposes of this demonstration, we will collapse our weighted network into an unweighted version to use in our logistic model.
+```{r mrqap-logit, warning=FALSE}
 # Get an unweighted (binary) matrix representation of the network
 mention.mat_bin <- as_adjacency_matrix(mention_graph, attr = NULL, sparse = F)
 
 # Construct a linear multiple regression model using QAP
 model.log <- netlogit(mention.mat_bin,
                   list(htag.mat, interest.mat),
-                  reps = 10)
+                  mode = "digraph",
+                  reps = 1)
 
 # View the model summary
 summary(model.log)
