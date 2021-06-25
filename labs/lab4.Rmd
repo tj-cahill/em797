@@ -16,20 +16,15 @@ We will again be importing the graph objects to be used in this analysis from th
 We will also need to load a few packages for this lab:
 
   - `readxl` for importing Excel data
-  - `stringr` for parsing data in strings
-  - `dplyr` for wrangling data
-  - `tidyr` for additional data wrangling
-  -  `Matrix` for handling sparse matrices
+  - `magrittr` for pipes
   - `igraph` for modelling and visualizing our network
   - `statnet` for additional inferential analysis tools
 
 ```{r load, message = FALSE}
 library(readxl)
-# library(stringr)
-# library(dplyr)
-# library(tidyr)
-# library(Matrix)
+library(magrittr)
 library(igraph)
+library(intergraph)
 library(statnet)
 
 # Import helper functions
@@ -39,9 +34,50 @@ source("lab4_functions.R")
 ```{r data-import, message=FALSE}
 # Import existing graph objects
 mention_graph <- readRDS("../data/mention_graph.RDS")
-htag_graph <- readRDS("../data/htag_graph.RDS")
 
 # Import original dataset
 lab <- read_excel("../data/lab.xlsx") %>% 
   rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
 ```
+
+```{r graph-gen}
+# Use the helper functions to generate additional graphs based on shared
+# attributes, to be used as IVs in our correlation / regression models
+
+# acctype.mat <- matrix_gen_acctype(lab)
+# gender.mat <- matrix_gen_gender(lab)
+htag.mat <- matrix_gen_htag(lab)
+interest.mat <- matrix_gen_interests(lab)
+# region.mat <- matrix_gen_region(lab)
+# verified.mat <- matrix_gen_verified(lab)
+
+# Let's take a look at one of the generated matrices
+interest.mat[1:10, 1:10]
+```
+
+```{r qap-cor}
+# In order to run a correlation analysis, we need both networks to be in a 
+# regular (NOT sparse) adjacency matrix format
+
+mention.mat <- as_adjacency_matrix(mention_graph, sparse = F)
+htag.mat <- as.matrix(htag.mat)
+
+# Calculate the correlation coefficient between the mention network and shared
+# hashtag usage
+gcor(mention.mat, htag.mat)
+
+# Run a QAP test to determine if this level of correlation is significant
+htag.cor <- qaptest(list(mention.mat, htag.mat),
+                    gcor,
+                    g1 = 1,
+                    g2 = 2,
+                    reps = 100)
+
+# View results of QAP test
+print(htag.cor)
+
+# Plot results of QAP test
+plot(htag.cor, xlim=c(-0.01, 0.005))
+```
+
+```{}

@@ -3,7 +3,7 @@ require(dplyr)
 require(tidyr)
 require(Matrix)
 
-# graph_gen(df, col, missing, add.nodes) - Generate a sociomatrix based on a 
+# matrix_gen(df, col, missing, add.nodes) - Generate a sociomatrix based on a 
 # generic shared attribute
 
 # df - The data frame containing the original data in tabular format
@@ -11,7 +11,7 @@ require(Matrix)
 # missing - The value used to replace missing data for the shared attribute
 # add.nodes - Column containing additional nodes with no attribute data
 
-graph_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
+matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
   
   user_attr_list <- df %>%
     select(user = Author, attr = !! sym(col)) 
@@ -41,31 +41,31 @@ graph_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
   return(shared_attr_matrix)
 }
 
-# graph_gen_region(df) - Generate a sociomatrix based on shared region - alias
-# for graph_gen()
-graph_gen_region <- function (df) {
-  return(graph_gen(df, col = "Region", missing = "No Region"))
+# matrix_gen_region(df) - Generate a sociomatrix based on shared region - alias
+# for matrix_gen()
+matrix_gen_region <- function (df) {
+  return(matrix_gen(df, col = "Region", missing = "No Region"))
 }
 
-# graph_gen_acctype(df) - Generate a sociomatrix based on shared account type -
-# alias for graph_gen()
-graph_gen_acctype <- function (df) { 
-  return(graph_gen(df, col = "AccountType", missing = "individual"))
+# matrix_gen_acctype(df) - Generate a sociomatrix based on shared account type -
+# alias for matrix_gen()
+matrix_gen_acctype <- function (df) { 
+  return(matrix_gen(df, col = "AccountType", missing = "individual"))
 }
 
-# graph_gen_gender(df) - Generate a sociomatrix based on shared gender - alias
-# for graph_gen()
-graph_gen_gender <- function (df) {
-  return(graph_gen(df, col = "Gender", missing = "unknown"))
+# matrix_gen_gender(df) - Generate a sociomatrix based on shared gender - alias
+# for matrix_gen()
+matrix_gen_gender <- function (df) {
+  return(matrix_gen(df, col = "Gender", missing = "unknown"))
 }
 
-# graph_gen_verified(df) - Generate a sociomatrix based on shared verified
-# status - alias for graph_gen()
-graph_gen_verified <- function (df) {
-  return(graph_gen(df, col = "TwitterVerified", missing = "false"))
+# matrix_gen_verified(df) - Generate a sociomatrix based on shared verified
+# status - alias for matrix_gen()
+matrix_gen_verified <- function (df) {
+  return(matrix_gen(df, col = "TwitterVerified", missing = "false"))
 }
 
-# graph_gen_multi(df, col, sep, add.nodes) - Generate a sociomatrix based on a 
+# matrix_gen_multi(df, col, sep, add.nodes) - Generate a sociomatrix based on a 
 # generic shared attribute that may contain multiple values
 
 # df - The data frame containing the original data in tabular format
@@ -73,7 +73,7 @@ graph_gen_verified <- function (df) {
 # sep - The character string separating values of the shared attribute
 # add.nodes - Column containing additional nodes with no attribute data
 
-graph_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors") {
+matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors") {
   
   # Combine listed attributes from multiple tweets by the same user
   user_attr_list <- df %>%
@@ -109,13 +109,13 @@ graph_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors"
   return(shared_attr_matrix)
 }
 
-# graph_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage -
-# alias for graph_gen_multi()
-graph_gen_htag <- function (df) {
-  return(graph_gen_multi(df, col = "Hashtags"))
+# matrix_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage -
+# alias for matrix_gen_multi()
+matrix_gen_htag <- function (df) {
+  return(matrix_gen_multi(df, col = "Hashtags"))
 }
 
-# Generate a sociomatrix based on shared interests - alias for graph_gen_multi()
-graph_gen_interests <- function (df) {
-  return(graph_gen_multi(df, col = "Interest"))
+# Generate a sociomatrix based on shared interests - alias for matrix_gen_multi()
+matrix_gen_interests <- function (df) {
+  return(matrix_gen_multi(df, col = "Interest"))
 }
