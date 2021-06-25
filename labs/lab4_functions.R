@@ -1,0 +1,121 @@
+require(stringr)
+require(dplyr)
+require(tidyr)
+require(Matrix)
+
+# graph_gen(df, col, missing, add.nodes) - Generate a sociomatrix based on a 
+# generic shared attribute
+
+# df - The data frame containing the original data in tabular format
+# col - The column of the data frame containing the shared attribute
+# missing - The value used to replace missing data for the shared attribute
+# add.nodes - Column containing additional nodes with no attribute data
+
+graph_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
+  
+  user_attr_list <- df %>%
+    select(user = Author, attr = !! sym(col)) 
+  
+  if (add.nodes != F) {
+    # Add additional nodes that may be represented in the network without attrs
+    add_user_list <- df %>%
+      select(user = !! sym(add.nodes)) %>%
+      separate_rows(user, sep = ", ") %>%                
+      mutate(user = str_replace_all(user, "@", "")) %>%
+      filter(!is.na(user)) %>%
+      bind_cols(attr = missing)
+    
+    user_attr_list <- bind_rows(user_attr_list, add_user_list) %>%
+      distinct(user, .keep_all = T) %>%
+      mutate(attr = replace_na(attr, missing))
+  }
+  
+  # Create an affiliation matrix connecting users based on a shared attribute
+  user_attr_matrix <- user_attr_list %>%
+    table() %>%
+    unclass() %>%
+    Matrix()
+  
+  # Multiply the affiliation matrix by its transpose to create a sociomatrix
+  shared_attr_matrix <- user_attr_matrix %*% t(user_attr_matrix)
+  return(shared_attr_matrix)
+}
+
+# graph_gen_region(df) - Generate a sociomatrix based on shared region - alias
+# for graph_gen()
+graph_gen_region <- function (df) {
+  return(graph_gen(df, col = "Region", missing = "No Region"))
+}
+
+# graph_gen_acctype(df) - Generate a sociomatrix based on shared account type -
+# alias for graph_gen()
+graph_gen_acctype <- function (df) { 
+  return(graph_gen(df, col = "AccountType", missing = "individual"))
+}
+
+# graph_gen_gender(df) - Generate a sociomatrix based on shared gender - alias
+# for graph_gen()
+graph_gen_gender <- function (df) {
+  return(graph_gen(df, col = "Gender", missing = "unknown"))
+}
+
+# graph_gen_verified(df) - Generate a sociomatrix based on shared verified
+# status - alias for graph_gen()
+graph_gen_verified <- function (df) {
+  return(graph_gen(df, col = "TwitterVerified", missing = "false"))
+}
+
+# graph_gen_multi(df, col, sep, add.nodes) - Generate a sociomatrix based on a 
+# generic shared attribute that may contain multiple values
+
+# df - The data frame containing the original data in tabular format
+# col - The column of the data frame containing the shared attribute
+# sep - The character string separating values of the shared attribute
+# add.nodes - Column containing additional nodes with no attribute data
+
+graph_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors") {
+  
+  # Combine listed attributes from multiple tweets by the same user
+  user_attr_list <- df %>%
+    select(user = Author, attrs = !! sym(col)) %>%
+    group_by(user) %>% mutate(attrs = paste(attrs, collapse = sep),
+                              attrs = str_split(attrs, sep)) %>%
+    rowwise() %>% mutate(attrs = list(unique(attrs)),
+                         attrs = list(sort(attrs))) %>%
+    distinct()
+  
+  if (add.nodes != F) {
+    # Add additional nodes that may be represented in the network without attrs
+    add_user_list <- df %>%
+      select(user = !! sym(add.nodes)) %>%
+      separate_rows(user, sep = ", ") %>%                
+      mutate(user = str_replace_all(user, "@", "")) %>%
+      filter(!is.na(user)) %>%
+      bind_cols(attrs = NA)
+    
+    user_attr_list <- bind_rows(user_attr_list, add_user_list) %>%
+      distinct(user, .keep_all = T) 
+  }
+  
+  # Convert the nested list to an affiliation matrix
+  attr_matrix <- user_attr_list %>%
+    unnest(attrs, keep_empty = T) %>%
+    table() %>%
+    unclass() %>%
+    Matrix()
+  
+  # Multiply the affiliation matrix by its transpose to create a sociomatrix
+  shared_attr_matrix <- attr_matrix %*% t(attr_matrix)
+  return(shared_attr_matrix)
+}
+
+# graph_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage -
+# alias for graph_gen_multi()
+graph_gen_htag <- function (df) {
+  return(graph_gen_multi(df, col = "Hashtags"))
+}
+
+# Generate a sociomatrix based on shared interests - alias for graph_gen_multi()
+graph_gen_interests <- function (df) {
+  return(graph_gen_multi(df, col = "Interest"))
+}
