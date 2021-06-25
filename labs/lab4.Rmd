@@ -3,7 +3,8 @@ title: 'Intro to Network Regression'
 author: "Tiernan Cahill"
 date: "23/06/2021"
 output:
-  html_document: default
+  github_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -84,7 +85,8 @@ htag.cor <- qaptest(list(mention.mat, htag.mat),
                     gcor,
                     g1 = 1,
                     g2 = 2,
-                    reps = 10)
+                    mode = "digraph",
+                    reps = 1000)
 
 # View results of QAP test
 print(htag.cor)
@@ -92,6 +94,7 @@ print(htag.cor)
 # Plot results of QAP test
 plot(htag.cor, xlim=c(-0.1, 0.1))
 ```
+
 ## Linear Regression
 For situations involving more than one IV, we may wish to construct a *multiple regression model* for our network of interest (DV). Calculation of standard errors for these models is also possible using QAP and supported by the `netlm` function from `statnet`, which functions similarly to the `lm` function from base R's `stats` package, albeit with a slightly different syntax, as shown below.
 
@@ -101,7 +104,7 @@ For situations involving more than one IV, we may wish to construct a *multiple 
 model.lm <- netlm(mention.mat,
                   list(htag.mat, interest.mat),
                   mode = "digraph",
-                  reps = 1)
+                  reps = 1000)
 
 # View the model summary
 summary(model.lm)
@@ -118,7 +121,7 @@ mention.mat_bin <- as_adjacency_matrix(mention_graph, attr = NULL, sparse = F)
 model.log <- netlogit(mention.mat_bin,
                   list(htag.mat, interest.mat),
                   mode = "digraph",
-                  reps = 1)
+                  reps = 1000)
 
 # View the model summary
 summary(model.log)
