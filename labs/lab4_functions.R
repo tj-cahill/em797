@@ -30,8 +30,10 @@ matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
       mutate(attr = replace_na(attr, missing))
   }
   
+  
   # Create an affiliation matrix connecting users based on a shared attribute
   user_attr_matrix <- user_attr_list %>%
+    filter(user != "NA") %>%
     table() %>%
     unclass() %>%
     Matrix()
@@ -99,6 +101,7 @@ matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors
   
   # Convert the nested list to an affiliation matrix
   attr_matrix <- user_attr_list %>%
+    filter(user != "NA") %>%
     unnest(attrs, keep_empty = T) %>%
     table() %>%
     unclass() %>%
