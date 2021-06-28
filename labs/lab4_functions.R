@@ -80,7 +80,7 @@ matrix_gen_verified <- function (df) {
 # sep - The character string separating values of the shared attribute
 # add.nodes - Column containing additional nodes with no attribute data
 
-matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors") {
+matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors", include.nodes = F) {
   
   # Combine listed attributes from multiple tweets by the same user
   user_attr_list <- df %>%
@@ -102,6 +102,11 @@ matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors
     
     user_attr_list <- bind_rows(user_attr_list, add_user_list) %>%
       distinct(user, .keep_all = T) 
+  }
+  
+  if (typeof(include.nodes) == "integer" && include.nodes != F) {
+    user_attr_list <- user_attr_list %>%
+      filter(user %in% names(include.nodes))
   }
   
   # Convert the nested list to an affiliation matrix
