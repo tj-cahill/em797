@@ -10,6 +10,8 @@ require(Matrix)
 # col - The column of the data frame containing the shared attribute
 # missing - The value used to replace missing data for the shared attribute
 # add.nodes - Column containing additional nodes with no attribute data
+# include.nodes - List of nodes (likely from a subgraph) to match the resulting
+#                 sociomatrix to using `include.nodes = V(subgraph)`
 
 matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors", include.nodes = F) {
   
@@ -79,6 +81,8 @@ matrix_gen_verified <- function (df) {
 # col - The column of the data frame containing the shared attribute
 # sep - The character string separating values of the shared attribute
 # add.nodes - Column containing additional nodes with no attribute data
+# include.nodes - List of nodes (likely from a subgraph) to match the resulting
+#                 sociomatrix to using `include.nodes = V(subgraph)`
 
 matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors", include.nodes = F) {
   
