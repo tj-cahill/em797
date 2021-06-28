@@ -11,7 +11,7 @@ require(Matrix)
 # missing - The value used to replace missing data for the shared attribute
 # add.nodes - Column containing additional nodes with no attribute data
 
-matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
+matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors", include.nodes = F) {
   
   user_attr_list <- df %>%
     select(user = Author, attr = !! sym(col)) 
@@ -28,6 +28,11 @@ matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
     user_attr_list <- bind_rows(user_attr_list, add_user_list) %>%
       distinct(user, .keep_all = T) %>%
       mutate(attr = replace_na(attr, missing))
+  }
+  
+  if (typeof(include.nodes) == "integer" && include.nodes != F) {
+    user_attr_list <- user_attr_list %>%
+      filter(user %in% names(include.nodes))
   }
   
   
