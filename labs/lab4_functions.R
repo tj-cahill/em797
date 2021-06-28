@@ -122,3 +122,23 @@ matrix_gen_htag <- function (df) {
 matrix_gen_interests <- function (df) {
   return(matrix_gen_multi(df, col = "Interest"))
 }
+
+if (require(readxl) && require(writexl)) {
+  
+  # xlsx_from_keywords(file.in, file.out, pattern) - Generates a smaller sample
+  # of an XLS or XLSX dataset based on keyword matching
+  
+  # file.in - Path of the input file in XLS or XLSX format
+  # file.out - Path of the output file to be created
+  # pattern - Grep pattern to match based on
+  # match.col - Column to match pattern to (defaults to Full Text of tweets)
+
+  xlsx_from_keywords <- function (file.in, file.out, pattern, match.col = "FullText") {
+    df_original <- read_excel(path = file.in) %>%
+      rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
+    
+    df_sub <- df_original %>% 
+      filter(str_detect(!! sym(match.col), pattern))
+    
+    write_xlsx(df_sub, path = file.out, col_names = T)
+}}
