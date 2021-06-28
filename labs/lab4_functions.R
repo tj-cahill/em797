@@ -10,8 +10,10 @@ require(Matrix)
 # col - The column of the data frame containing the shared attribute
 # missing - The value used to replace missing data for the shared attribute
 # add.nodes - Column containing additional nodes with no attribute data
+# include.nodes - List of nodes (likely from a subgraph) to match the resulting
+#                 sociomatrix to using `include.nodes = V(subgraph)`
 
-matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
+matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors", include.nodes = F) {
   
   user_attr_list <- df %>%
     select(user = Author, attr = !! sym(col)) 
@@ -30,6 +32,10 @@ matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
       mutate(attr = replace_na(attr, missing))
   }
   
+  if (typeof(include.nodes) == "integer" && include.nodes != F) {
+    user_attr_list <- user_attr_list %>%
+      filter(user %in% names(include.nodes))
+  }
   
   # Create an affiliation matrix connecting users based on a shared attribute
   user_attr_matrix <- user_attr_list %>%
@@ -45,26 +51,34 @@ matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors") {
 
 # matrix_gen_region(df) - Generate a sociomatrix based on shared region - alias
 # for matrix_gen()
-matrix_gen_region <- function (df) {
-  return(matrix_gen(df, col = "Region", missing = "No Region"))
+matrix_gen_region <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+  return(matrix_gen(df, col = "Region", missing = "No Region", 
+                    add.nodes = add.nodes,
+                    include.nodes = include.nodes))
 }
 
 # matrix_gen_acctype(df) - Generate a sociomatrix based on shared account type -
 # alias for matrix_gen()
-matrix_gen_acctype <- function (df) { 
-  return(matrix_gen(df, col = "AccountType", missing = "individual"))
+matrix_gen_acctype <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) { 
+  return(matrix_gen(df, col = "AccountType", missing = "individual", 
+                    add.nodes = add.nodes,
+                    include.nodes = include.nodes))
 }
 
 # matrix_gen_gender(df) - Generate a sociomatrix based on shared gender - alias
 # for matrix_gen()
-matrix_gen_gender <- function (df) {
-  return(matrix_gen(df, col = "Gender", missing = "unknown"))
+matrix_gen_gender <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+  return(matrix_gen(df, col = "Gender", missing = "unknown", 
+                    add.nodes = add.nodes,
+                    include.nodes = include.nodes))
 }
 
 # matrix_gen_verified(df) - Generate a sociomatrix based on shared verified
 # status - alias for matrix_gen()
-matrix_gen_verified <- function (df) {
-  return(matrix_gen(df, col = "TwitterVerified", missing = "false"))
+matrix_gen_verified <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+  return(matrix_gen(df, col = "TwitterVerified", missing = "false", 
+                    add.nodes = add.nodes,
+                    include.nodes = include.nodes))
 }
 
 # matrix_gen_multi(df, col, sep, add.nodes) - Generate a sociomatrix based on a 
@@ -74,8 +88,10 @@ matrix_gen_verified <- function (df) {
 # col - The column of the data frame containing the shared attribute
 # sep - The character string separating values of the shared attribute
 # add.nodes - Column containing additional nodes with no attribute data
+# include.nodes - List of nodes (likely from a subgraph) to match the resulting
+#                 sociomatrix to using `include.nodes = V(subgraph)`
 
-matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors") {
+matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors", include.nodes = F) {
   
   # Combine listed attributes from multiple tweets by the same user
   user_attr_list <- df %>%
@@ -99,6 +115,11 @@ matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors
       distinct(user, .keep_all = T) 
   }
   
+  if (typeof(include.nodes) == "integer" && include.nodes != F) {
+    user_attr_list <- user_attr_list %>%
+      filter(user %in% names(include.nodes))
+  }
+  
   # Convert the nested list to an affiliation matrix
   attr_matrix <- user_attr_list %>%
     filter(user != "NA") %>%
@@ -114,11 +135,35 @@ matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors
 
 # matrix_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage -
 # alias for matrix_gen_multi()
-matrix_gen_htag <- function (df) {
-  return(matrix_gen_multi(df, col = "Hashtags"))
+matrix_gen_htag <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+  return(matrix_gen_multi(df, col = "Hashtags", sep = ", ", 
+                          add.nodes = add.nodes,
+                          include.nodes = include.nodes))
 }
 
 # Generate a sociomatrix based on shared interests - alias for matrix_gen_multi()
-matrix_gen_interests <- function (df) {
-  return(matrix_gen_multi(df, col = "Interest"))
+matrix_gen_interests <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+  return(matrix_gen_multi(df, col = "Interest", sep = ", ", 
+                          add.nodes = add.nodes,
+                          include.nodes = include.nodes))
 }
+
+if (require(readxl) && require(writexl)) {
+  
+  # xlsx_from_keywords(file.in, file.out, pattern) - Generates a smaller sample
+  # of an XLS or XLSX dataset based on keyword matching
+  
+  # file.in - Path of the input file in XLS or XLSX format
+  # file.out - Path of the output file to be created
+  # pattern - Grep pattern to match based on
+  # match.col - Column to match pattern to (defaults to Full Text of tweets)
+
+  xlsx_from_keywords <- function (file.in, file.out, pattern, match.col = "FullText") {
+    df_original <- read_excel(path = file.in) %>%
+      rename_all(~str_replace_all(., "\\s+", "")) # Remove whitespace from variable names
+    
+    df_sub <- df_original %>% 
+      filter(str_detect(!! sym(match.col), pattern))
+    
+    write_xlsx(df_sub, path = file.out, col_names = T)
+}}
