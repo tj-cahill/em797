@@ -3,6 +3,7 @@ require(dplyr)
 require(tidyr)
 require(Matrix)
 
+
 # matrix_gen(df, col, missing, add.nodes) - Generate a sociomatrix based on a 
 # generic shared attribute
 
@@ -13,7 +14,13 @@ require(Matrix)
 # include.nodes - List of nodes (likely from a subgraph) to match the resulting
 #                 sociomatrix to using `include.nodes = V(subgraph)`
 
-matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors", include.nodes = F) {
+matrix_gen <- function (df, col, missing = NA, add.nodes = "Mentioned Authors", include.nodes = F) {
+  
+  # Check to see whether column name for add.nodes contains whitespace
+  if (!(add.nodes %in% colnames(df))) {
+    add.nodes <- str_replace(add.nodes, "\\s+", "")
+  }
+  
   
   user_attr_list <- df %>%
     select(user = Author, attr = !! sym(col)) 
@@ -51,7 +58,7 @@ matrix_gen <- function (df, col, missing = NA, add.nodes = "MentionedAuthors", i
 
 # matrix_gen_region(df) - Generate a sociomatrix based on shared region - alias
 # for matrix_gen()
-matrix_gen_region <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+matrix_gen_region <- function (df, add.nodes = "Mentioned Authors", include.nodes = F) {
   return(matrix_gen(df, col = "Region", missing = "No Region", 
                     add.nodes = add.nodes,
                     include.nodes = include.nodes))
@@ -59,7 +66,7 @@ matrix_gen_region <- function (df, add.nodes = "MentionedAuthors", include.nodes
 
 # matrix_gen_acctype(df) - Generate a sociomatrix based on shared account type -
 # alias for matrix_gen()
-matrix_gen_acctype <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) { 
+matrix_gen_acctype <- function (df, add.nodes = "Mentioned Authors", include.nodes = F) { 
   return(matrix_gen(df, col = "AccountType", missing = "individual", 
                     add.nodes = add.nodes,
                     include.nodes = include.nodes))
@@ -67,7 +74,7 @@ matrix_gen_acctype <- function (df, add.nodes = "MentionedAuthors", include.node
 
 # matrix_gen_gender(df) - Generate a sociomatrix based on shared gender - alias
 # for matrix_gen()
-matrix_gen_gender <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+matrix_gen_gender <- function (df, add.nodes = "Mentioned Authors", include.nodes = F) {
   return(matrix_gen(df, col = "Gender", missing = "unknown", 
                     add.nodes = add.nodes,
                     include.nodes = include.nodes))
@@ -75,7 +82,7 @@ matrix_gen_gender <- function (df, add.nodes = "MentionedAuthors", include.nodes
 
 # matrix_gen_verified(df) - Generate a sociomatrix based on shared verified
 # status - alias for matrix_gen()
-matrix_gen_verified <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+matrix_gen_verified <- function (df, add.nodes = "Mentioned Authors", include.nodes = F) {
   return(matrix_gen(df, col = "TwitterVerified", missing = "false", 
                     add.nodes = add.nodes,
                     include.nodes = include.nodes))
@@ -91,7 +98,12 @@ matrix_gen_verified <- function (df, add.nodes = "MentionedAuthors", include.nod
 # include.nodes - List of nodes (likely from a subgraph) to match the resulting
 #                 sociomatrix to using `include.nodes = V(subgraph)`
 
-matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors", include.nodes = F) {
+matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "Mentioned Authors", include.nodes = F) {
+  
+  # Check to see whether column name for add.nodes contains whitespace
+  if (!(add.nodes %in% colnames(df))) {
+    add.nodes <- str_replace(add.nodes, "\\s+", "")
+  }
   
   # Combine listed attributes from multiple tweets by the same user
   user_attr_list <- df %>%
@@ -135,14 +147,14 @@ matrix_gen_multi <- function (df, col, sep = ", ", add.nodes = "MentionedAuthors
 
 # matrix_gen_htag(df) - Generate a sociomatrix based on shared hashtag usage -
 # alias for matrix_gen_multi()
-matrix_gen_htag <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+matrix_gen_htag <- function (df, add.nodes = "Mentioned Authors", include.nodes = F) {
   return(matrix_gen_multi(df, col = "Hashtags", sep = ", ", 
                           add.nodes = add.nodes,
                           include.nodes = include.nodes))
 }
 
 # Generate a sociomatrix based on shared interests - alias for matrix_gen_multi()
-matrix_gen_interests <- function (df, add.nodes = "MentionedAuthors", include.nodes = F) {
+matrix_gen_interests <- function (df, add.nodes = "Mentioned Authors", include.nodes = F) {
   return(matrix_gen_multi(df, col = "Interest", sep = ", ", 
                           add.nodes = add.nodes,
                           include.nodes = include.nodes))
